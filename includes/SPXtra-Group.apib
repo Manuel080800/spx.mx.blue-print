@@ -2261,16 +2261,28 @@ Tabla `codes`, Lista de códigos de error
 
 Método que permite imprimir un diario al SunPlus, por medio del API de SunPlusXtra.
 
+Tabla `printFormat`
+
+        | printFormat  | Descripción                     |
+        |--------------|---------------------------------|
+        | PFP          | Imprimir Poliza Financiera      |
+        | PP           | Imprimir Pago                   |
+        | PC           | Imprimir Cheque                 |
+        | PR           | Imprimir Recibo                 |
+        | PCS          | Imprimir Corte de Caja          |
+        | PNM          | Imprimir Nota de Aviso          |
 
 Tabla `codes`, Lista de códigos de error
 
-        | Código     | Descripción                                     |
-        |-----------|-------------------------------------------------|
-        | 201 | Error devuelto por SunPlus                |
+        | Código     | Descripción                          |
+        |-----------|---------------------------------------|
+        | 201 | Error devuelto por SunPlus                  |
         | 202 | Error de conexión al SunPlus                |
-        | 203 | Error de respuesta o parámetros inválidos                |
+        | 203 | Error de respuesta o parámetros inválidos   |
 
+Existen dos formas de imprimir un diario, el primero utilizando el logo por **default** mediante `Request` y el segundo, empleando un logo personalizado con la clave **logoSource** mediante `Request` `Logo personalizado`.
 
+Para imprimir con un logo personalizado, es necesario proporcionar un objeto `logoOption` con una clave `logoSource` que es un logo con extensión **.jpg** o **.png** codificado en base64.
 
 
 + Request (application/json)
@@ -2283,12 +2295,79 @@ Tabla `codes`, Lista de códigos de error
     + Body
 
             {
-                "journalNumber": "123456",
-                "book": "A"
+                "journalNumber": 5588,
+                "finalJournalNumber": 4447,
+                "book": "A",
+                "printFormat": "PNM"
             }
 
+    + Schema
 
+            {
+                "type": "object",
+                "properties": {
+                    "journalNumber": {
+                        "type": "integer"
+                    },
+                    "finalJournalNumber": {
+                        "type": "integer"
+                    },
+                    "book": {
+                        "type": "string"
+                    },
+                    "printFormat": {
+                        "type": "string"
+                    }
+                }
+            }
 
++ Request Logo personalizado (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "journalNumber": 5588,
+                "finalJournalNumber": 4447,
+                "book": "A",
+                "printFormat": "PNM",
+                "logoOption": {
+                    "logoSource": "IMAGE_base64"
+                }
+            }
+    
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "journalNumber": {
+                        "type": "integer"
+                    },
+                    "finalJournalNumber": {
+                        "type": "integer"
+                    },
+                    "book": {
+                        "type": "string"
+                    },
+                    "printFormat": {
+                        "type": "string"
+                    },
+                    "logoOption": {
+                        "type": "object",
+                        "properties": {
+                            "logoSource": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+    
 
 + Response 200 (application/json)
 

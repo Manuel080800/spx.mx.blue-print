@@ -1979,6 +1979,41 @@ A continuación se muestra un ejemplo:</p>
   "<span class="hljs-attribute">code</span>": <span class="hljs-value"><span class="hljs-string">"CODIGO_ERROR"</span></span>,
   "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">true</span>
 </span>}</code></pre><div style="height: 1px;"></div></div></div></div><div id="sunplusxtra-api-journals-get" class="action get"><h4 class="action-heading"><div class="name">Imprimir Diario</div><a href="#sunplusxtra-api-journals-get" class="method get">GET</a><code class="uri">/journal/print</code></h4><p>Método que permite imprimir un diario al SunPlus, por medio del API de SunPlusXtra.</p>
+<p>Tabla <code>printFormat</code></p>
+<table>
+<thead>
+<tr>
+<th>printFormat</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PFP</td>
+<td>Imprimir Poliza Financiera</td>
+</tr>
+<tr>
+<td>PP</td>
+<td>Imprimir Pago</td>
+</tr>
+<tr>
+<td>PC</td>
+<td>Imprimir Cheque</td>
+</tr>
+<tr>
+<td>PR</td>
+<td>Imprimir Recibo</td>
+</tr>
+<tr>
+<td>PCS</td>
+<td>Imprimir Corte de Caja</td>
+</tr>
+<tr>
+<td>PNM</td>
+<td>Imprimir Nota de Aviso</td>
+</tr>
+</tbody>
+</table>
 <p>Tabla <code>codes</code>, Lista de códigos de error</p>
 <table>
 <thead>
@@ -2002,9 +2037,61 @@ A continuación se muestra un ejemplo:</p>
 </tr>
 </tbody>
 </table>
+<p>Existen dos formas de imprimir un diario, el primero utilizando el logo por <strong>default</strong> mediante <code>Request</code> y el segundo, empleando un logo personalizado con la clave <strong>logoSource</strong> mediante <code>Request</code> <code>Logo personalizado</code>.</p>
+<p>Para imprimir con un logo personalizado, es necesario proporcionar un objeto <code>logoOption</code> con una clave <code>logoSource</code> que es un logo con extensión <strong>.jpg</strong> o <strong>.png</strong> codificado en base64.</p>
 <h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://gateway.iadnet.org/qwhq/spx/v1.1</span>/journal/print</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span><br><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span><br><span class="hljs-attribute">Authorization</span>: <span class="hljs-string">bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
-  "<span class="hljs-attribute">journalNumber</span>": <span class="hljs-value"><span class="hljs-string">"123456"</span></span>,
-  "<span class="hljs-attribute">book</span>": <span class="hljs-value"><span class="hljs-string">"A"</span>
+  "<span class="hljs-attribute">journalNumber</span>": <span class="hljs-value"><span class="hljs-number">5588</span></span>,
+  "<span class="hljs-attribute">finalJournalNumber</span>": <span class="hljs-value"><span class="hljs-number">4447</span></span>,
+  "<span class="hljs-attribute">book</span>": <span class="hljs-value"><span class="hljs-string">"A"</span></span>,
+  "<span class="hljs-attribute">printFormat</span>": <span class="hljs-value"><span class="hljs-string">"PNM"</span>
+</span>}</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
+  "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+  "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">journalNumber</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"integer"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">finalJournalNumber</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"integer"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">book</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">printFormat</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span>
+    </span>}
+  </span>}
+</span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Request&nbsp;&nbsp;<code>Logo personalizado</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span><br><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span><br><span class="hljs-attribute">Authorization</span>: <span class="hljs-string">bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+  "<span class="hljs-attribute">journalNumber</span>": <span class="hljs-value"><span class="hljs-number">5588</span></span>,
+  "<span class="hljs-attribute">finalJournalNumber</span>": <span class="hljs-value"><span class="hljs-number">4447</span></span>,
+  "<span class="hljs-attribute">book</span>": <span class="hljs-value"><span class="hljs-string">"A"</span></span>,
+  "<span class="hljs-attribute">printFormat</span>": <span class="hljs-value"><span class="hljs-string">"PNM"</span></span>,
+  "<span class="hljs-attribute">logoOption</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">logoSource</span>": <span class="hljs-value"><span class="hljs-string">"IMAGE_base64"</span>
+  </span>}
+</span>}</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
+  "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+  "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">journalNumber</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"integer"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">finalJournalNumber</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"integer"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">book</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">printFormat</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">logoOption</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+      "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">logoSource</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span>
+        </span>}
+      </span>}
+    </span>}
+  </span>}
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
   "<span class="hljs-attribute">message</span>": <span class="hljs-value"><span class="hljs-string">"Cargado correctamente"</span></span>,
   "<span class="hljs-attribute">response</span>": <span class="hljs-value"><span class="hljs-string">"{PDF_base64}"</span>
@@ -5769,7 +5856,7 @@ La respuesta también tiene esos mismos niveles, ya que se devuelve la vinculaci
   "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"MENSAJE_ERROR"</span></span>,
   "<span class="hljs-attribute">code</span>": <span class="hljs-value"><span class="hljs-string">"CODIGO_ERROR"</span></span>,
   "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">true</span>
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;Shotsware&nbsp;on 10 Oct 2024</p><script>/* eslint-env browser */
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;Shotsware&nbsp;on 11 Oct 2024</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 
