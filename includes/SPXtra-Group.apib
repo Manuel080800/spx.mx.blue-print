@@ -1,0 +1,4340 @@
+# Group SunPlusXtra API
+
+
+## /company
+Comunicación con la información de la empresa
+
+### Datos de la empresa [GET]
+
+Se obtiene la información básica de la compañía y sus datos fiscales, como `Razón Social`, `Código Postal`, `Régimen fiscal`, `Uso del CFDI`.
+
+::: note
+    ## Sin parámetros
+:::
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error en los datos obtenidos                |
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": {
+                    "id": 5,
+                    "nombre": "IAN Iglesia Adventista Nacional",
+                    "rfc": "IAS930628FA8",
+                    "razonsocial": "INDISTRIA ILUMINADORA DE ALMACENES",
+                    "codigoPostal": "03020",
+                    "direccion": "UXMAL 431",
+                    "regimenFiscal": "601",
+                    "usoCfdi": "G03"
+                }
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+
+## /notificatios/{periodo}/{soloPendientes}/{cancelados}
+
+Comunicación con las notificaciones o avisos entre las empresas
++ Parameters
+
+    + periodo: 2022007 (required) - Periodo de consulta
+    + soloPendientes: 1 (requerido) - Si se requiere solo las notificaciones pendientes, se debe enviar el valor 1
+    + cancelados: 0 (requerido) - Para obtener solo los cancelados, se deberá enviar el valor 1
+
+### Notificaciones o Avisos a la empresa [GET]
+
+
+Se obtiene la información básica de la compañía.
+
+Tabla `estatus`
+
+        | estatus     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 1 | Pendiente                |
+        | 4 | Rechazado                |
+        | 6 | Contabilizado                |
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error en los datos obtenidos                |
+        | 206 | Los parámetros enviados son inválidos                |
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "id": 29,
+                        "idPoliza": 751908,
+                        "jrnalNo": 9993,
+                        "idPolizaDetalle": 4999598,
+                        "empresaOrigen": "W11 - Unión Sureste",
+                        "idEmpresaOrigen": 97,
+                        "movimiento": "Crédito",
+                        "empresaDestino": "IAN Iglesia Adventista Nacional",
+                        "cantidad": "18630.00",
+                        "cuentaOrigen": null,
+                        "cuentaDestino": null,
+                        "razonRechazo": null,
+                        "idEstatus": 1,
+                        "linea": 2,
+                        "periodo": "2022007",
+                        "diario": null,
+                        "polizaDetalle": null,
+                        "idPolizaContabiliza": null
+                    },
+                    {
+                        "id": 30,
+                        "idPoliza": 752159,
+                        "jrnalNo": 9996,
+                        "idPolizaDetalle": 5001604,
+                        "empresaOrigen": "W11 - Unión Sureste",
+                        "idEmpresaOrigen": 97,
+                        "movimiento": "Crédito",
+                        "empresaDestino": "IAN Iglesia Adventista Nacional",
+                        "cantidad": "7695.00",
+                        "cuentaOrigen": null,
+                        "cuentaDestino": null,
+                        "razonRechazo": null,
+                        "idEstatus": 1,
+                        "linea": 9,
+                        "periodo": "2022007",
+                        "diario": null,
+                        "polizaDetalle": null,
+                        "idPolizaContabiliza": null
+                    }
+
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+
+
+## /clientes{?search}
+
+Recursos disponibles para acceder a la información de los clientes
+
++ Parameters
+
+    + search: % (string, optional) - Parámetro para indicar el filtro para consulta
+
+### Lista de Clientes [GET]
+
+Método para obtener una lista de clientes.
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 201 | Error en los datos obtenidos                |
+        | 202 | Error de información recibida Datos incorrectos                |
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "id": 2,
+                        "rfc": "IAS160707U62",
+                        "razonSocial": "Iglesia Adventista del Séptimo Día Union del Norte, A.R.",
+                        "clave": "AGM111",
+                        "tipoPersonaFiscal": "Persona Moral",
+                        "orgId": "AGM111",
+                        "regimenFiscal": "603 - Personas Morales con Fines no Lucrativos",
+                        "usoCfdi": "G03 - Gastos en general",
+                        "direccion": "Carretera Nacional Km 205 No. S/N, El Desague",
+                        "codigoPostal": "67500",
+                        "telefono": "8262634625",
+                        "fax": "",
+                        "correoElectronico": "agm111@unav.edu.mx",
+                        "celular": null,
+                        "extranjero": false,
+                        "pais": "México",
+                        "estado": "Nuevo León",
+                        "municipio": "Montemorelos",
+                        "ciudad": "Montemorelos",
+                        "idUsoCfdi": null,
+                        "claveUsoCfdi": "G03",
+                        "idFormaPago": null,
+                        "nombreFormaPago": null,
+                        "claveSat": null,
+                        "idProducto": null,
+                        "nombreProducto": null,
+                        "codigoSatProducto": null,
+                        "claveProducto": null,
+                        "descProducto": null,
+                        "donativoproducto": null,
+                        "complementoeducativoproducto": null,
+                        "claveUnidadMedidaProducto": null,
+                        "objetoImpProducto": null
+                    },
+                    {
+                        "id": 48,
+                        "rfc": "IAS1512182J8",
+                        "razonSocial": "Iglesia Adventista del Séptimo Día Sección Norte de Chiapas, A.R.",
+                        "clave": "AGPL11",
+                        "tipoPersonaFiscal": "Persona Moral",
+                        "orgId": "AGPL11",
+                        "regimenFiscal": "603 - Personas Morales con Fines no Lucrativos",
+                        "usoCfdi": "G03 - Gastos en general",
+                        "direccion": "Andres Serra Rojas No. 12, Las Ranas",
+                        "codigoPostal": "29520",
+                        "telefono": "",
+                        "fax": "",
+                        "correoElectronico": "contadorseccionnorte@gmail.com",
+                        "celular": null,
+                        "extranjero": false,
+                        "pais": "México",
+                        "estado": "Chiapas",
+                        "municipio": "Pichucalco",
+                        "ciudad": "Pichucalco",
+                        "idUsoCfdi": null,
+                        "claveUsoCfdi": "G03",
+                        "idFormaPago": null,
+                        "nombreFormaPago": null,
+                        "claveSat": null,
+                        "idProducto": null,
+                        "nombreProducto": null,
+                        "codigoSatProducto": null,
+                        "claveProducto": null,
+                        "descProducto": null,
+                        "donativoproducto": null,
+                        "complementoeducativoproducto": null,
+                        "claveUnidadMedidaProducto": null,
+                        "objetoImpProducto": null
+                    }
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+
+## /products{?search}
+
+Recursos disponibles para obtener la lista de productos
+
++ Parameters
+
+    + search: % (string, optional) - Parámetro para indicar el filtro para consulta
+
+### Lista de Productos [GET]
+
+Método para obtener la lista de Productos.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 201 | Error en los datos obtenidos                |
+        | 202 | Error de información recibida Datos incorrectos                |
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+                {
+                    "search":"%"
+                }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "nombre": "Diezmos y Ofrendas",
+                        "descripcion": "",
+                        "codigoSat": "94111901",
+                        "clave": "1001",
+                        "claveUnidadMedida": "ACT",
+                        "esdonativo": false,
+                        "complementoEducativo": true,
+                        "predefinido": false
+                    },
+                    {
+                        "nombre": "Diezmos y Ofrendas",
+                        "descripcion": "@fechaOperacion",
+                        "codigoSat": "94111901",
+                        "clave": "6101",
+                        "claveUnidadMedida": "ACT",
+                        "esdonativo": false,
+                        "complementoEducativo": false,
+                        "predefinido": true
+                    }
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+## /configuration-expenses/{tipoConfiguracion}
+
+Recursos disponibles para obtener la lista de configuraciones de gastos
+
+
++ Parameters
+
+    + tipoConfiguracion: Producto (string, required) - Parámetro para indicar el tipo de configuraación a obtener
+
+
+
+### Configuraciones de Gastos [GET]
+
+Método para obtener los datos de configuración de gastos.
+
+
+    | Parámetros     | Tipo     | Requerido | Descripción                                     |
+    |----------------|----------|-----------|-------------------------------------------------|
+    | `tipoConfiguracion`     | string   | si        | `Producto`, `Impuesto`, `Otros Comprobantes`, `Complemento`                |
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 201 | Error en los datos obtenidos                |
+        | 202 | Error en la consulta, parámetros inválidos                |
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "tipoGasto": "Producto",
+                        "claveProdServ": "15101514",
+                        "impuesto": null,
+                        "tipo": null,
+                        "cuenta": "822210",
+                        "nombreCuenta": "VIAJES REGULARES (PROGRMAS EVANGELISMO)",
+                        "recurso": "UFTF",
+                        "tfww": "9204",
+                        "fondo": "10",
+                        "funcion": null,
+                        "restriccion": "32B",
+                        "sdaOrg": null,
+                        "who": null,
+                        "flag": null,
+                        "proyecto": null,
+                        "detalles": null,
+                        "descripcion": null,
+                        "movimiento": "D"
+                    },
+                    {
+                        "tipoGasto": "Producto",
+                        "claveProdServ": "78111500",
+                        "impuesto": null,
+                        "tipo": null,
+                        "cuenta": "822210",
+                        "nombreCuenta": "VIAJES REGULARES (PROGRMAS EVANGELISMO)",
+                        "recurso": "UFTF",
+                        "tfww": "8709",
+                        "fondo": "10",
+                        "funcion": null,
+                        "restriccion": "32B",
+                        "sdaOrg": null,
+                        "who": null,
+                        "flag": null,
+                        "proyecto": null,
+                        "detalles": null,
+                        "descripcion": null,
+                        "movimiento": "D"
+                    },
+                    {
+                        "tipoGasto": "Producto",
+                        "claveProdServ": "01010101",
+                        "impuesto": null,
+                        "tipo": null,
+                        "cuenta": "201201",
+                        "nombreCuenta": "Terrenos",
+                        "recurso": null,
+                        "tfww": null,
+                        "fondo": null,
+                        "funcion": null,
+                        "restriccion": null,
+                        "sdaOrg": null,
+                        "who": null,
+                        "flag": null,
+                        "proyecto": null,
+                        "detalles": null,
+                        "descripcion": null,
+                        "movimiento": "D"
+                    }
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+## /data-student{?search}
+
+Recursos disponibles para obtener la lista de estudiantes
+
+
++ Parameters
+
+    + search: ERALCJO01 (string, required) - Parámetro para realizar la consulta o filtro de búsqueda
+
+
+
+### Datos de estudiante [GET]
+
+Método para obtener los datos del estudiante.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 201 | Error en los datos obtenidos                |
+        | 202 | Error en la consulta, parámetros inválidos                |
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "matricula": "ERALCJO01",
+                        "curp": "ROAR801109HYNSLN08",
+                        "rvoe": "343533434",
+                        "nivelEstudio": "Preescolar"
+                    }
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+## /bank-account
+
+Recursos disponibles para registrar una cuenta bancaria
+
+
+### Registrar Cuenta bancaria [POST]
+
+Método para registrar una cuenta bancaria, es necesario tener las cuentas bancarias registradas para poder manipular los movimeintos bancarios.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 201 | Código del banco es null o vacío                |
+        | 202 | Código del banco no existe                |
+        | 203 | La cuenta del banco es null o vacía                |
+        | 204 | AccountCode es null o vacío                |
+        | 205 | Control Account es null o vacío                |
+        | 206 | Control Tfww es null o vacío                |
+        | 207 | Datos de respuesta incorrectos                |
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
+    + Body
+
+            {
+                "codigoBanco" : "012",
+                "cuentaBanco" : "87987",
+                "accountCode" : "10002",
+                "isDolar" : true,
+                "controlAccount" : "10003",
+                "controlTfww" : "103"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Registro creado o actualizado correctamente"
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+
+## BANK STATEMENTS [/bank-statement]
+
+Recursos disponibles para obtener y modificar los movimientos bancarios
+
+
+### Get Bank Statements [GET]
+
+Método para obtener la lista de movimientos bancarios.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error en los datos obtenidos                |
+        | 206 | Los parámetros enviados son inválidos                |
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "activo": true,
+                        "curp": "CODL680126MVZHMD05",
+                        "enrollmentCode": "ERCHOLU01",
+                        "groupCode": "2",
+                        "groupName": "EDU-Contrato",
+                        "name": "CHONG DOMÍNGUEZ, LUCINA",
+                        "rfc": "CODL680126BF4"
+                    }
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+### Update Bank Statements [PUT]
+
+Método que permite modificar un movimeinto bancario.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error en los datos obtenidos                |
+        | 206 | Los parámetros enviados son inválidos                |
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "idEdoCtaBancoDetalle": 374097,
+                "jrnalNo":3421,
+                "uuIds":[
+                    "4D0024E5-12BB-574B-A183-D2FBDC0BEB97", "C799F88B-D45B-764F-ACD4-20462893B5B2"
+                ]
+
+            }
+
+
+    + Schema
+
+            {
+                  "type": "object",
+                  "properties": {
+                      "idEdoCtaBancoDetalle": {
+                          "type": "integer"
+                      },
+                      "jrnalNo": {
+                          "type": "string"
+                      },
+                      "uuIds": {
+                          "type": "array",
+                          "items": {
+                              "type": "string"
+                          }
+                      }
+                  }
+              }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Actualizado correctamente"
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+### Register Bank Statements [POST]
+
+Método que permite modificar un movimeinto bancario.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 201 | Código del banco es null o vacío                |
+        | 202 | Código del banco no existe                |
+        | 203 | La cuenta del banco es null o vacía                |
+        | 204 | La lista de detalles de estados de cuenta es null o vacía                |
+        | 205 | ¡Atención! Los movimientos ubicados en las posiciones [`num_mov_no_guardados`] no se han guardado.                |
+        | 206 | Error al guardar el estado de cuenta banco                |
+        | 207 | Otros errores                |
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "cuentaBanco":"199185860",
+                "codigoBanco":"012",
+                "movimientos": [
+                    {
+                        "fechaOperacion" : "2023/01/23",
+                        "concepto" : "Operación 1",
+                        "referencia" : "Transferencia 9893",
+                        "referenciaAmpliada" : "Transferencia ampliada 1",
+                        "cargo" : "0.00",
+                        "abono" : "10000.00",
+                        "uuid" : "CCCCC-DDDDDD",
+                        "journalNumber" : "1234",
+                        "transaccion" : ""
+
+                    },
+                    {
+                        "fechaOperacion" : "2023/01/23",
+                        "concepto" : "Operación 2",
+                        "referencia" : "Transferencia 2345",
+                        "referenciaAmpliada" : "Transferencia ampliada 2",
+                        "cargo" : "0.00",
+                        "abono" : "20000.00",
+                        "uuid" : "AAAAA-BBBBB",
+                        "journalNumber" : "4321",
+                        "transaccion" : ""
+
+                    }
+                ]
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "cuentaBanco": {
+                        "type": "string"
+                    },
+                    "codigoBanco": {
+                        "type": "string"
+                    },
+                    "movimientos": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "fechaOperacion": {
+                                    "type": "string",
+                                    "format" : "yyyy/mm/dd"
+                                },
+                                "concepto" : {
+                                    "type": "string"
+                                },
+                                "referencia" : {
+                                    "type" : "string"
+                                },
+                                "referenciaAmpliada" : {
+                                    "type" : "string"
+                                },
+                                "cargo" : {
+                                    "type" : "string"
+                                },
+                                "abono" : {
+                                    "type" : "string"
+                                },
+                                "uuid" : {
+                                    "type" : "string"
+                                },
+                                "journalNumber" : {
+                                    "type" : "string"
+                                },
+                                "transaccion" : {
+                                    "type" : "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Cargado correctamente",
+                "response" : {
+                    "journalNumber" : "123456",
+                    "voucherNumber" : "VCHR123456"
+                }
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+
+## /account-balance{?cuenta,periodo}
+
+Recursos disponibles para obtener el balance de una cuenta
+
+### Account Balance [GET]
+
+Método para obtener el balance de una cuenta.
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202        | Error en los datos obtenidos                    |
+        | 203        | Error en los datos obtenidos                    |
+        | 206        | Los parámetros enviados son inválidos           |
+
+
++ Parameters
+
+    + cuenta: 101110 (required) - Parametro para indicar un código de cuenta
+    + periodo: 2023001 (required) - Parametro para indicar el periodo
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTAINED_FROM_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": {
+                    "cuenta": "101110",
+                    "saldo": "12332"
+                }
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+## /account-list{?part,code}
+
+Recursos disponibles para obtener la lista de cuentas filtradas por parámetros
+
++ Parameters
+
+    + part: 101110 (string, required) - Parámetro para indicar el código de la cuenta a consultar o el texto del nombre
+    + code: 1 (string, required) - Parámetro para indicar si la busqueda se hará exclusivamente por código
+
+
+
+### Listado de las cuentas [GET]
+
+Método para obtener el listado de cuentas, incluyendo las dimenciones requeridas.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error datos no enontrados, según la información dada                |
+        | 206 | Error de información recibida Datos incorrectos                |
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "accountType": 4,
+                        "allocationInProgress": 99,
+                        "balanceType": 0,
+                        "code": "101110",
+                        "currency": "MXP1 ",
+                        "drcr": null,
+                        "enterA1": 2,
+                        "enterA10": 2,
+                        "enterA2": 1,
+                        "enterA3": 1,
+                        "enterA4": 2,
+                        "enterA5": 2,
+                        "enterA6": 2,
+                        "enterA7": 2,
+                        "enterA8": 2,
+                        "enterA9": 2,
+                        "id": "101110         ",
+                        "longDescr": null,
+                        "lookup": "CAJA GENERAL   ",
+                        "name": "Caja General",
+                        "shortHead": "Caja General",
+                        "status": 0,
+                        "updateCount": null
+                    },
+                    {
+                        "accountType": 4,
+                        "allocationInProgress": 99,
+                        "balanceType": 0,
+                        "code": "101110 NF",
+                        "currency": "MXP1 ",
+                        "drcr": null,
+                        "enterA1": 2,
+                        "enterA10": 2,
+                        "enterA2": 1,
+                        "enterA3": 1,
+                        "enterA4": 2,
+                        "enterA5": 2,
+                        "enterA6": 2,
+                        "enterA7": 2,
+                        "enterA8": 2,
+                        "enterA9": 2,
+                        "id": "101110 NF      ",
+                        "longDescr": null,
+                        "lookup": "CAJA GENERAL NO",
+                        "name": "Caja general No Fiscal",
+                        "shortHead": "Caja general No",
+                        "status": 0,
+                        "updateCount": null
+                    }
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+## DIMENSIONS [/dimension]
+
+Recursos disponibles para obtener la lista de cuentas filtradas por parámetros
+
+
+
+### List Dimensions [GET /dimension{?catID}]
+
+Método para obtener el listado de las dimensiones filtradas por catID de la dimensión
+
+Tala `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error datos no enontrados, según la información dada                |
+        | 206 | Error de información recibida Datos incorrectos                |
+
+
+
++ Parameters
+
+    + catID: 1 (string, required) - Parámetro para indicar si la busqueda se hará exclusivamente por código
+
+        Tabla `catID`
+
+                | catID     | Dimensión                                     |
+                |------------|-------------------------------------------------|
+                | 01 | Recurso                |
+                | 02 | TFWW                |
+                | 03 | Fondo                |
+                | 04 | Función                |
+                | 05 | Restricción                |
+                | 06 | SDAOrgID                |
+                | 07 | Who                |
+                | 08 | Flag                |
+                | 09 | Proyecto                |
+                | 10 | Detalles                |
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "code": "10",
+                        "id": "03",
+                        "lookup": "Fondo de Operac",
+                        "name": "Fondo de Operación",
+                        "prohibitPosting": 0,
+                        "updateCount": null
+                    },
+                    {
+                        "code": "20",
+                        "id": "03",
+                        "lookup": "Fondo Planta",
+                        "name": "Fondo Planta",
+                        "prohibitPosting": 0,
+                        "updateCount": null
+                    },
+                    {
+                        "code": "AUSISTE01",
+                        "id": "03",
+                        "lookup": "AUSISTE01",
+                        "name": "Sistemas",
+                        "prohibitPosting": 0,
+                        "updateCount": null
+                    }
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+### Update Dimension [PUT]
+
+Método que permite modificar una dimensión específica y su configuración de niveles educativos.
+
+### Modificar dimension
+La modificación de una dimension puede realizarce mediante el peticion de [`Request`](#request-put-dimensions).
+
+### Modificar dimension asociada con una configuración de nivel educativo
+La modificación de una dimension asociada con una configuracion de nivel educativo puede realizarce mediante la peticion de [`Request` `Niveles educativos`](#request-put-dimensions-educations).
+
+Es necesario proporcionar un objeto `complementaryData` que contenga los siguientes parametros:
+
+- **curp**: La Clave Unica de Registro de Población (CURP) de la persona asociada.
+- **idConfNivelEducativo**: Identificador del nivel educativo configurado, el cual se puede obtener mediante `education-levels/all` que devuelve una lista con todos los `id` de los niveles educativos. Puede acceder mediante este [enlace](#sunplusxtra-api-education-levels-get).
+- **idNomina**: Identificador de la nómina para cada institucíon, el cual se puede obtener al acceder en las configuraciones de la plataforma: `Datos de empresa` > `Configuración de nómina` > `Editar`. Puede acceder mediante este [enlace](https://www.sunpluscloud.mx/admince/empresa/updatebyrol#!#tabNominaData).
+
+**Importante:** Para realizar esta modificación, es necesario que el `catId` tenga como valor `07` (WHO). En caso contrario, no se contemplara este objeto.
+
+
+Tabla `catID`
+
+        | catID      | Dimensión                                       |
+        |------------|-------------------------------------------------|
+        | 01         | Recurso                                         |
+        | 02         | TFWW                                            |
+        | 03         | Fondo                                           |
+        | 04         | Función                                         |
+        | 05         | Restricción                                     |
+        | 06         | SDAOrgID                                        |
+        | 07         | Who                                             |
+        | 08         | Flag                                            |
+        | 09         | Proyecto                                        |
+        | 10         | Detalles                                        |
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error en los datos obtenidos                |
+        | 206 | Los parámetros enviados son inválidos                |
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "catId":"07",
+                "code":"DC0121",
+                "lookup":"DC012A",
+                "name":"Dimensión creada",
+                "prohibitPosting":0,
+            }
+    
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "catId": {
+                        "type": "string",
+                        "description": "Identificador de la categoría"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Código de la dimensión"
+                    },
+                    "lookup": {
+                        "type": "string",
+                        "description": "Valor de búsqueda para la dimensión"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Nombre de la dimensión"
+                    },
+                    "prohibitPosting": {
+                        "type": "integer",
+                        "description": "Indica si la publicación está prohibida (0 = no, 1 = sí)"
+                    }
+                }
+            }
+
+
++ Request Niveles educativos (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "catId":"07",
+                "code":"DC0121",
+                "lookup":"DC012A",
+                "name":"Dimensión creada",
+                "prohibitPosting":0,
+                "complementaryData": {
+                    "curp":"NDFP901102HMNGNG76",
+                    "idConfNivelEducativo": 233,
+                    "idNomina": 27
+                }
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "catId": {
+                        "type": "string",
+                        "description": "Identificador de la categoría"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Código de la dimensión"
+                    },
+                    "lookup": {
+                        "type": "string",
+                        "description": "Valor de búsqueda para la dimensión"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Nombre de la dimensión"
+                    },
+                    "prohibitPosting": {
+                        "type": "integer",
+                        "description": "Indica si la publicación está prohibida (0 = no, 1 = sí)"
+                    },
+                    "complementaryData": {
+                        "type": "object",
+                        "properties": {
+                            "curp": {
+                                "type": "string",
+                                "description": "CURP de la persona asociada"
+                            },
+                            "idConfNivelEducativo": {
+                                "type": "integer",
+                                "description": "Identificador del nivel educativo configurado"
+                            },
+                            "idNomina": {
+                                "type": "integer",
+                                "description": "Identificador de la nómina"
+                            }
+                        }
+                    }
+                }
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta"
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "Parece no existir el código",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+### Register Dimension [POST]
+
+Método que permite registrar una dimensión y su configuracion de niveles educativos.
+
+### Registrar dimension
+El registro de una dimension puede realizarce mediante el peticion de [`Request`](#request-post-dimensions).
+
+### Registrar dimension asociada con una configuración de nivel educativo
+El registro de una dimension asociada con una configuracion de nivel educativo puede realizarce mediante la peticion de [`Request` `Niveles educativos`](#request-post-dimensions-educations).
+
+Es necesario proporcionar un objeto `complementaryData` que contenga los siguientes parametros:
+
+- **curp**: La Clave Unica de Registro de Población (CURP) de la persona asociada.
+- **idConfNivelEducativo**: Identificador del nivel educativo configurado, el cual se puede obtener mediante `education-levels/all` que devuelve una lista con todos los `id` de los niveles educativos. Puede acceder mediante este [enlace](#sunplusxtra-api-education-levels-get).
+- **idNomina**: Identificador de la nómina para cada institucíon, el cual se puede obtener al acceder en las configuraciones de la plataforma: `Datos de empresa` > `Configuración de nómina` > `Editar`. Puede acceder mediante este [enlace](https://www.sunpluscloud.mx/admince/empresa/updatebyrol#!#tabNominaData).
+
+**Importante:** Para realizar este registro, es necesario que el `catId` tenga como valor `07` (WHO). En caso contrario, no se contemplara este objeto.
+
+
+Tabla `catID`
+
+        | catID      | Dimensión                                       |
+        |------------|-------------------------------------------------|
+        | 01         | Recurso                                         |
+        | 02         | TFWW                                            |
+        | 03         | Fondo                                           |
+        | 04         | Función                                         |
+        | 05         | Restricción                                     |
+        | 06         | SDAOrgID                                        |
+        | 07         | Who                                             |
+        | 08         | Flag                                            |
+        | 09         | Proyecto                                        |
+        | 10         | Detalles                                        |
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202        | Error en los datos obtenidos                    |
+        | 203        | Error en los datos obtenidos                    |
+        | 206        | Los parámetros enviados son inválidos           |
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "catId":"07",
+                "code":"DC0121",
+                "lookup":"DC012A",
+                "name":"Dimensión creada",
+                "prohibitPosting":0,
+            }
+    
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "catId": {
+                        "type": "string",
+                        "description": "Identificador de la categoría"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Código de la dimensión"
+                    },
+                    "lookup": {
+                        "type": "string",
+                        "description": "Valor de búsqueda para la dimensión"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Nombre de la dimensión"
+                    },
+                    "prohibitPosting": {
+                        "type": "integer",
+                        "description": "Indica si la publicación está prohibida (0 = no, 1 = sí)"
+                    }
+                }
+            }
+
+
++ Request Niveles educativos (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "catId":"07",
+                "code":"DC0121",
+                "lookup":"DC012A",
+                "name":"Dimensión creada",
+                "prohibitPosting":0,
+                "complementaryData": {
+                    "curp":"NDFP901102HMNGNG76",
+                    "idConfNivelEducativo": 233,
+                    "idNomina": 27
+                }
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "catId": {
+                        "type": "string",
+                        "description": "Identificador de la categoría"
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Código de la dimensión"
+                    },
+                    "lookup": {
+                        "type": "string",
+                        "description": "Valor de búsqueda para la dimensión"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Nombre de la dimensión"
+                    },
+                    "prohibitPosting": {
+                        "type": "integer",
+                        "description": "Indica si la publicación está prohibida (0 = no, 1 = sí)"
+                    },
+                    "complementaryData": {
+                        "type": "object",
+                        "properties": {
+                            "curp": {
+                                "type": "string",
+                                "description": "CURP de la persona asociada"
+                            },
+                            "idConfNivelEducativo": {
+                                "type": "integer",
+                                "description": "Identificador del nivel educativo configurado"
+                            },
+                            "idNomina": {
+                                "type": "integer",
+                                "description": "Identificador de la nómina"
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+### Delete a Dimension [DELETE]
+
+Método que permite remover una dimensión.
+
+Tabla `catID`
+
+                | catID     | Dimensión                                     |
+                |------------|-------------------------------------------------|
+                | 01 | Recurso                |
+                | 02 | TFWW                |
+                | 03 | Fondo                |
+                | 04 | Función                |
+                | 05 | Restricción                |
+                | 06 | SDAOrgID                |
+                | 07 | Who                |
+                | 08 | Flag                |
+                | 09 | Proyecto                |
+                | 10 | Detalles                |
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error en los datos obtenidos                |
+        | 206 | Los parámetros enviados son inválidos                |
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "catId":"07",
+                "code":"JV0121"
+            }
+
+
+    + Schema
+
+            {
+                              "type": "object",
+                              "properties": {
+                                  "catId": {
+                                      "type": "string"
+                                  },
+                                  "code": {
+                                      "type": "string"
+                                  }
+                              }
+                          }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+## JOURNALS [/journal]
+
+Recursos disponibles para contabilizar un diario
+
+### Contabilizar Diario [POST]
+
+Método que permite contabilizar un diario al SunPlus, por medio del API de SunPlusXtra.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 201 | Error devuelto por SunPlus                |
+        | 202 | Error de conexión al SunPlus                |
+        | 203 | Error de respuesta o parámetros inválidos                |
+
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "requestPolizaDetalles" : [
+                    {
+                        "linea" : 1,
+                        "vencimiento" : "",
+                        "journalType" : "JV",
+                        "cuenta" : "101110",
+                        "treference" : "EJEMPLO",
+                        "recurso" : "",
+                        "tfww" : "1001",
+                        "fondo" : "10",
+                        "funcion" : "",
+                        "restriccion" : "",
+                        "sdaOrganizacion" : "",
+                        "who" : "",
+                        "flag" : "",
+                        "proyecto" : "",
+                        "detalles" : "",
+                        "descripcion" : "LINEA 1",
+                        "movimiento" : "C",
+                        "importe" : 1.00,
+                        "moneda" : "MXN1",
+                        "transDateTime" : "2018-06-30",
+                        "memoAmount" : "",
+                        "periodo" : "2018006",
+                        "fechaPrevista" : "",
+                        "assetCode" : "",
+                        "assetIndicator" : "",
+                        "descripcion1" : "",
+                        "descripcion2" : "",
+                        "descripcion3" : "",
+                        "descripcion4" : "",
+                        "descripcion5" : "",
+                        "descripcion6" : "",
+                        "descripcion7" : "",
+                        "descripcion8" : "",
+                        "descripcion9" : "",
+                        "descripcion10" : "",
+                        "descripcion11" : "",
+                        "descripcion12" : "",
+                        "descripcion13" : "",
+                        "descripcion14" : "",
+                        "descripcion15" : "",
+                        "descripcion16" : "",
+                        "descripcion17" : "",
+                        "descripcion18" : "",
+                        "descripcion19" : "",
+                        "descripcion20" : "",
+                        "descripcion21" : "",
+                        "descripcion22" : "",
+                        "descripcion23" : "",
+                        "descripcion24" : "",
+                        "descripcion25" : ""
+                    },
+                    {
+                        "linea" : 2,
+                        "vencimiento" : "",
+                        "journalType" : "JV",
+                        "cuenta" : "101110",
+                        "treference" : "EJEMPLO",
+                        "recurso" : "",
+                        "tfww" : "1001",
+                        "fondo" : "10",
+                        "funcion" : "",
+                        "restriccion" : "",
+                        "sdaOrganizacion" : "",
+                        "who" : "",
+                        "flag" : "",
+                        "proyecto" : "",
+                        "detalles" : "",
+                        "descripcion" : "LINEA 1",
+                        "movimiento" : "D",
+                        "importe" : 1.00,
+                        "moneda" : "MXN1",
+                        "transDateTime" : "2018-06-30",
+                        "memoAmount" : "",
+                        "periodo" : "2018006",
+                        "fechaPrevista" : "",
+                        "assetCode" : "",
+                        "assetIndicator" : "",
+                        "descripcion1" : "",
+                        "descripcion2" : "",
+                        "descripcion3" : "",
+                        "descripcion4" : "",
+                        "descripcion5" : "",
+                        "descripcion6" : "",
+                        "descripcion7" : "",
+                        "descripcion8" : "",
+                        "descripcion9" : "",
+                        "descripcion10" : "",
+                        "descripcion11" : "",
+                        "descripcion12" : "",
+                        "descripcion13" : "",
+                        "descripcion14" : "",
+                        "descripcion15" : "",
+                        "descripcion16" : "",
+                        "descripcion17" : "",
+                        "descripcion18" : "",
+                        "descripcion19" : "",
+                        "descripcion20" : "",
+                        "descripcion21" : "",
+                        "descripcion22" : "",
+                        "descripcion23" : "",
+                        "descripcion24" : "",
+                        "descripcion25" : ""
+                    }
+                ]
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+
+                    "requestPolizaDetalles": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "linea": {
+                                    "type": "integer",
+                                    "required" : true
+                                },
+                                "vencimiento" : {
+                                    "type": "string",
+                                    "format" : "yyyy-mm-dd",
+                                    "required" : false
+                                },
+                                "journalType" : {
+                                    "type" : "string",
+                                    "required" : true
+                                },
+                                "cuenta" : {
+                                    "type" : "string",
+                                    "required" : true
+                                },
+                                "treference" : {
+                                    "type" : "string",
+                                    "required" : true
+                                },
+                                "recurso" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "tfww" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "fondo" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "funcion" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "restriccion" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "sdaOrganizacion" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "who" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "flag" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "proyecto" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "detalles" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "descripcion" : {
+                                    "type" : "string",
+                                    "required" : true
+                                },
+                                "movimiento" : {
+                                    "type" : "string",
+                                    "required" : true,
+                                    "option" : ['C', 'D']
+                                },
+                                "importe" : {
+                                    "type" : "numeric",
+                                    "required" : true
+                                },
+                                "moneda" : {
+                                    "type" : "string",
+                                    "required" : true
+                                },
+                                "transDateTime" : {
+                                    "type" : "string",
+                                    "format" : "yyyy-mm-dd",
+                                    "required" : true
+                                },
+                                "memoAmount" : {
+                                    "type" : "numeric",
+                                    "required" : false
+                                },
+                                "periodo" : {
+                                    "type" : "string",
+                                    "format" : "yyyy'0mm",
+                                    "required" : true
+                                },
+                                "fechaPrevista" : {
+                                    "type" : "string",
+                                    "format" : "yyyy-mm-dd",
+                                    "required" : false
+                                },
+                                "assetCode" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "assetIndicator" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "descripcion1" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "descripcion2" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "descripcion3" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "descripcion4" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "descripcion5" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "descripcion6" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "descripcion7" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "descripcion8" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "descripcion9" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+                                "descripcion10" : {
+                                    "type" : "string",
+                                    "required" : false
+                                },
+
+
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "operación exitosa"
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+### Imprimir Diario [GET /journal/print]
+
+Método que permite imprimir un diario al SunPlus, por medio del API de SunPlusXtra.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 201 | Error devuelto por SunPlus                |
+        | 202 | Error de conexión al SunPlus                |
+        | 203 | Error de respuesta o parámetros inválidos                |
+
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "journalNumber": "123456",
+                "book": "A"
+            }
+
+
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Cargado correctamente",
+                "response": "{PDF_base64}"
+            }
+
++ Response 220 (application/json)
+  Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+  Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+  Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+### Rango Diario [POST /journal/range/{startJrnalNo}/{endJrnalNo}]
+
+Método que permite obtener un rango de diarios contabilizados en el SunPlus, por medio del API de SunPlusXtra.
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                    |
+        |-----------|-------------------------------------------------|
+        | 201 | Error devuelto por SunPlus                            |
+        | 202 | Error de conexión al SunPlus                          |
+        | 203 | Error de respuesta o parámetros inválidos             |
+
+
++ Parameters
+
+    + startJrnalNo: 5326 (string, required) - Numero de diario inicial
+    + endJrnalNo: 5328 (string, required) - Numero de diario final
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Cargado correctamente",
+                "response": [
+                    {
+                        "lineas": [
+                            {
+                                "journalDetalle": {
+                                    "accntCode": "371110         ",
+                                    "afterPstgDateTime": 1626843600000,
+                                    "allocDateTime": 1626843600000,
+                                    "allocId": null,
+                                    "allocInProgress": " ",
+                                    "allocPeriod": 2018006,
+                                    "allocRef": 1285,
+                                    "allocation": "A",
+                                    "allocnCode": null,
+                                    "allocnStmnts": null,
+                                    "amount": -94281.85,
+                                    "analT0": "               ",
+                                    "analT1": "NF             ",
+                                    "analT2": "10             ",
+                                    "analT3": "               ",
+                                    "analT4": "               ",
+                                    "analT5": "*              ",
+                                    "analT6": "               ",
+                                    "analT7": "               ",
+                                    "analT8": "               ",
+                                    "analT9": "               ",
+                                    "assetCode": "          ",
+                                    "assetInd": " ",
+                                    "assetSub": "     ",
+                                    "cleardown": "0    ",
+                                    "convCode": "MXN1 ",
+                                    "convRate": 1,
+                                    "cv4Amt": -94281.85,
+                                    "cv4ConvCode": "MXN1 ",
+                                    "cv4ConvRate": 1,
+                                    "cv4Dp": "2",
+                                    "cv4Operator": "*",
+                                    "dc": "D",
+                                    "descriptn": "cierre de caja",
+                                    "dueDateTime": 1532149200000,
+                                    "entryDateTime": 1626843600000,
+                                    "entryPrd": 2018006,
+                                    "inUseFlag": " ",
+                                    "journalReference": 0,
+                                    "jrnalLine": 1,
+                                    "jrnalNo": 5326,
+                                    "jrnalSrce": "ZC1  ",
+                                    "jrnalType": "JV   ",
+                                    "lossGain": " ",
+                                    "memoAmt": 0,
+                                    "monedaPlural": "PESOS",
+                                    "monedaSingular": "PESO",
+                                    "nombreMoneda": "PESO MEXICANO",
+                                    "otherAmt": -94281.85,
+                                    "otherDp": "2",
+                                    "period": 2018006,
+                                    "postingDateTime": 1626843600000,
+                                    "principalReqd": 0,
+                                    "reportAmt": 0,
+                                    "reversal": " ",
+                                    "roughFlag": " ",
+                                    "transDateTime": 1532149200000,
+                                    "vchrNum": "JV2018-0714",
+                                    "treference": "cierre                        "
+                                }
+                            },
+                            {
+                                 "journalDetalle": {
+                                    "accntCode": "371110         ",
+                                    "afterPstgDateTime": 1626843600000,
+                                    "allocDateTime": 1626843600000,
+                                    "allocId": null,
+                                    "allocInProgress": " ",
+                                    "allocPeriod": 2018006,
+                                    "allocRef": 1285,
+                                    "allocation": "A",
+                                    "allocnCode": null,
+                                    "allocnStmnts": null,
+                                    "amount": -777550.52,
+                                    "analT0": "               ",
+                                    "analT1": "NF             ",
+                                    "analT2": "10             ",
+                                    "analT3": "               ",
+                                    "analT4": "               ",
+                                    "analT5": "*              ",
+                                    "analT6": "               ",
+                                    "analT7": "               ",
+                                    "analT8": "               ",
+                                    "analT9": "               ",
+                                    "assetCode": "          ",
+                                    "assetInd": " ",
+                                    "assetSub": "     ",
+                                    "cleardown": "0    ",
+                                    "convCode": "MXN1 ",
+                                    "convRate": 1,
+                                    "cv4Amt": -777550.52,
+                                    "cv4ConvCode": "MXN1 ",
+                                    "cv4ConvRate": 1,
+                                    "cv4Dp": "2",
+                                    "cv4Operator": "*",
+                                    "dc": "D",
+                                    "descriptn": "cierre de caja",
+                                    "dueDateTime": 1532149200000,
+                                    "entryDateTime": 1626843600000,
+                                    "entryPrd": 2018006,
+                                    "inUseFlag": " ",
+                                    "journalReference": 0,
+                                    "jrnalLine": 2,
+                                    "jrnalNo": 5326,
+                                    "jrnalSrce": "ZC1  ",
+                                    "jrnalType": "JV   ",
+                                    "lossGain": " ",
+                                    "memoAmt": 0,
+                                    "monedaPlural": "PESOS",
+                                    "monedaSingular": "PESO",
+                                    "nombreMoneda": "PESO MEXICANO",
+                                    "otherAmt": -777550.52,
+                                    "otherDp": "2",
+                                    "period": 2018006,
+                                    "postingDateTime": 1626843600000,
+                                    "principalReqd": 0,
+                                    "reportAmt": 0,
+                                    "reversal": " ",
+                                    "roughFlag": " ",
+                                    "transDateTime": 1532149200000,
+                                    "vchrNum": "JV2018-0714",
+                                    "treference": "cierre                        "
+                                }
+                            },
+                            {
+                                "journalDetalle": {
+                                    "accntCode": "101110         ",
+                                    "afterPstgDateTime": 1626843600000,
+                                    "allocDateTime": 1626843600000,
+                                    "allocId": null,
+                                    "allocInProgress": " ",
+                                    "allocPeriod": 0,
+                                    "allocRef": 0,
+                                    "allocation": " ",
+                                    "allocnCode": null,
+                                    "allocnStmnts": null,
+                                    "amount": 871832.37,
+                                    "analT0": "               ",
+                                    "analT1": "NF             ",
+                                    "analT2": "10             ",
+                                    "analT3": "               ",
+                                    "analT4": "               ",
+                                    "analT5": "               ",
+                                    "analT6": "               ",
+                                    "analT7": "               ",
+                                    "analT8": "               ",
+                                    "analT9": "               ",
+                                    "assetCode": "          ",
+                                    "assetInd": " ",
+                                    "assetSub": "     ",
+                                    "cleardown": "00000",
+                                    "convCode": "MXN1 ",
+                                    "convRate": 1,
+                                    "cv4Amt": 871832.37,
+                                    "cv4ConvCode": "MXN1 ",
+                                    "cv4ConvRate": 1,
+                                    "cv4Dp": "2",
+                                    "cv4Operator": "*",
+                                    "dc": "C",
+                                    "descriptn": "cierre de caja",
+                                    "dueDateTime": 1532149200000,
+                                    "entryDateTime": 1626843600000,
+                                    "entryPrd": 2018006,
+                                    "inUseFlag": " ",
+                                    "journalReference": 0,
+                                    "jrnalLine": 3,
+                                    "jrnalNo": 5326,
+                                    "jrnalSrce": "ZC1  ",
+                                    "jrnalType": "JV   ",
+                                    "lossGain": " ",
+                                    "memoAmt": 0,
+                                    "monedaPlural": "PESOS",
+                                    "monedaSingular": "PESO",
+                                    "nombreMoneda": "PESO MEXICANO",
+                                    "otherAmt": 871832.37,
+                                    "otherDp": "2",
+                                    "period": 2018006,
+                                    "postingDateTime": 1626843600000,
+                                    "principalReqd": 0,
+                                    "reportAmt": 0,
+                                    "transDateTime": 1532149200000,
+                                    "vchrNum": "JV2018-0714",
+                                    "treference": "cierre                        "
+                                }
+                            }
+                        ],
+                        "jrnalNo": 5326,
+                        "comprobantes": []
+                    }
+                ]
+            }
+
+        
+    + Schema
+
+                {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "response": {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "lineas": {
+                                            "type": "array",
+                                            "items": [
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "journalDetalle": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "accntCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "afterPstgDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocId": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocInProgress": {
+                                                                    "type": "string"
+                                                                },
+                                                                "allocPeriod": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocRef": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocation": {
+                                                                    "type": "string"
+                                                                },
+                                                                "allocnCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "allocnStmnts": {
+                                                                    "type": "string"
+                                                                },
+                                                                "amount": {
+                                                                    "type": "number"
+                                                                },
+                                                                "analT0": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT1": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT2": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT3": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT4": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT5": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT6": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT7": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT8": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT9": {
+                                                                    "type": "string"
+                                                                },
+                                                                "assetCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "assetInd": {
+                                                                    "type": "string"
+                                                                },
+                                                                "assetSub": {
+                                                                    "type": "string"
+                                                                },
+                                                                "cleardown": {
+                                                                    "type": "string"
+                                                                },
+                                                                "convCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "convRate": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "cv4Amt": {
+                                                                    "type": "number"
+                                                                },
+                                                                "cv4ConvCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "cv4ConvRate": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "cv4Dp": {
+                                                                    "type": "string"
+                                                                },
+                                                                "cv4Operator": {
+                                                                    "type": "string"
+                                                                },
+                                                                "dc": {
+                                                                    "type": "string"
+                                                                },
+                                                                "descriptn": {
+                                                                    "type": "string"
+                                                                },
+                                                                "dueDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "entryDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "entryPrd": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "inUseFlag": {
+                                                                    "type": "string"
+                                                                },
+                                                                "journalReference": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "jrnalLine": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "jrnalNo": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "jrnalSrce": {
+                                                                    "type": "string"
+                                                                },
+                                                                "jrnalType": {
+                                                                    "type": "string"
+                                                                },
+                                                                "lossGain": {
+                                                                    "type": "string"
+                                                                },
+                                                                "memoAmt": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "monedaPlural": {
+                                                                    "type": "string"
+                                                                },
+                                                                "monedaSingular": {
+                                                                    "type": "string"
+                                                                },
+                                                                "nombreMoneda": {
+                                                                    "type": "string"
+                                                                },
+                                                                "otherAmt": {
+                                                                    "type": "number"
+                                                                },
+                                                                "otherDp": {
+                                                                    "type": "string"
+                                                                },
+                                                                "period": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "postingDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "principalReqd": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "reportAmt": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "reversal": {
+                                                                    "type": "string"
+                                                                },
+                                                                "roughFlag": {
+                                                                    "type": "string"
+                                                                },
+                                                                "transDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "vchrNum": {
+                                                                    "type": "string"
+                                                                },
+                                                                "treference": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "journalDetalle": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "accntCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "afterPstgDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocId": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocInProgress": {
+                                                                    "type": "string"
+                                                                },
+                                                                "allocPeriod": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocRef": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocation": {
+                                                                    "type": "string"
+                                                                },
+                                                                "allocnCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "allocnStmnts": {
+                                                                    "type": "string"
+                                                                },
+                                                                "amount": {
+                                                                    "type": "number"
+                                                                },
+                                                                "analT0": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT1": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT2": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT3": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT4": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT5": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT6": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT7": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT8": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT9": {
+                                                                    "type": "string"
+                                                                },
+                                                                "assetCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "assetInd": {
+                                                                    "type": "string"
+                                                                },
+                                                                "assetSub": {
+                                                                    "type": "string"
+                                                                },
+                                                                "cleardown": {
+                                                                    "type": "string"
+                                                                },
+                                                                "convCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "convRate": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "cv4Amt": {
+                                                                    "type": "number"
+                                                                },
+                                                                "cv4ConvCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "cv4ConvRate": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "cv4Dp": {
+                                                                    "type": "string"
+                                                                },
+                                                                "cv4Operator": {
+                                                                    "type": "string"
+                                                                },
+                                                                "dc": {
+                                                                    "type": "string"
+                                                                },
+                                                                "descriptn": {
+                                                                    "type": "string"
+                                                                },
+                                                                "dueDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "entryDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "entryPrd": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "inUseFlag": {
+                                                                    "type": "string"
+                                                                },
+                                                                "journalReference": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "jrnalLine": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "jrnalNo": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "jrnalSrce": {
+                                                                    "type": "string"
+                                                                },
+                                                                "jrnalType": {
+                                                                    "type": "string"
+                                                                },
+                                                                "lossGain": {
+                                                                    "type": "string"
+                                                                },
+                                                                "memoAmt": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "monedaPlural": {
+                                                                    "type": "string"
+                                                                },
+                                                                "monedaSingular": {
+                                                                    "type": "string"
+                                                                },
+                                                                "nombreMoneda": {
+                                                                    "type": "string"
+                                                                },
+                                                                "otherAmt": {
+                                                                    "type": "number"
+                                                                },
+                                                                "otherDp": {
+                                                                    "type": "string"
+                                                                },
+                                                                "period": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "postingDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "principalReqd": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "reportAmt": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "reversal": {
+                                                                    "type": "string"
+                                                                },
+                                                                "roughFlag": {
+                                                                    "type": "string"
+                                                                },
+                                                                "transDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "vchrNum": {
+                                                                    "type": "string"
+                                                                },
+                                                                "treference": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "journalDetalle": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "accntCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "afterPstgDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocId": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocInProgress": {
+                                                                    "type": "string"
+                                                                },
+                                                                "allocPeriod": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocRef": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "allocation": {
+                                                                    "type": "string"
+                                                                },
+                                                                "allocnCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "allocnStmnts": {
+                                                                    "type": "string"
+                                                                },
+                                                                "amount": {
+                                                                    "type": "number"
+                                                                },
+                                                                "analT0": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT1": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT2": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT3": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT4": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT5": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT6": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT7": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT8": {
+                                                                    "type": "string"
+                                                                },
+                                                                "analT9": {
+                                                                    "type": "string"
+                                                                },
+                                                                "assetCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "assetInd": {
+                                                                    "type": "string"
+                                                                },
+                                                                "assetSub": {
+                                                                    "type": "string"
+                                                                },
+                                                                "cleardown": {
+                                                                    "type": "string"
+                                                                },
+                                                                "convCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "convRate": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "cv4Amt": {
+                                                                    "type": "number"
+                                                                },
+                                                                "cv4ConvCode": {
+                                                                    "type": "string"
+                                                                },
+                                                                "cv4ConvRate": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "cv4Dp": {
+                                                                    "type": "string"
+                                                                },
+                                                                "cv4Operator": {
+                                                                    "type": "string"
+                                                                },
+                                                                "dc": {
+                                                                    "type": "string"
+                                                                },
+                                                                "descriptn": {
+                                                                    "type": "string"
+                                                                },
+                                                                "dueDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "entryDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "entryPrd": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "inUseFlag": {
+                                                                    "type": "string"
+                                                                },
+                                                                "journalReference": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "jrnalLine": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "jrnalNo": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "jrnalSrce": {
+                                                                    "type": "string"
+                                                                },
+                                                                "jrnalType": {
+                                                                    "type": "string"
+                                                                },
+                                                                "lossGain": {
+                                                                    "type": "string"
+                                                                },
+                                                                "memoAmt": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "monedaPlural": {
+                                                                    "type": "string"
+                                                                },
+                                                                "monedaSingular": {
+                                                                    "type": "string"
+                                                                },
+                                                                "nombreMoneda": {
+                                                                    "type": "string"
+                                                                },
+                                                                "otherAmt": {
+                                                                    "type": "number"
+                                                                },
+                                                                "otherDp": {
+                                                                    "type": "string"
+                                                                },
+                                                                "period": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "postingDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "principalReqd": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "reportAmt": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "transDateTime": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "vchrNum": {
+                                                                    "type": "string"
+                                                                },
+                                                                "treference": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "jrnalNo": {
+                                            "type": "integer"
+                                        },
+                                        "comprobantes": {
+                                            "type": "array",
+                                            "items": {}
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+## EDUCATION LEVELS [/education-levels]
+
+Recursos disponibles para los niveles educativos
+
+### List Education Levels [GET /education-levels/all]
+
+Método para obtener el listado de todos los niveles educativos.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 203        | Error de respuesta o parámetros inválidos       |
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "id": 1,
+                        "nombre": "Preescolar"
+                    },
+                    {
+                        "id": 2,
+                        "nombre": "Primaria"
+                    },
+                    {
+                        "id": 3,
+                        "nombre": "Secundaria"
+                    },
+                    {
+                        "id": 4,
+                        "nombre": "Profesional técnico"
+                    },
+                    {
+                        "id": 5,
+                        "nombre": "Bachillerato o su equivalente"
+                    }
+                ]
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "response": {
+                        "type": "array",
+                        "items": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "nombre": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "nombre": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "nombre": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "nombre": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "nombre": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+
+
++ Response 220 (application/json)
+  Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+  Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+  Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+## EDUCATION LEVELS CONFIG [/education-levels-config]
+
+Recursos disponibles para la configuración de los niveles educativos
+
+### Get Configuration List [GET /education-levels-config/all]
+
+Método para obtener el listado de todas las configuraciones de los niveles educativos.
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 203        | Error de respuesta o parámetros inválidos       |
+        | 206        | No se encontraron los datos                     |
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+    
+
+    + Body
+    
+                {
+                    "idNomina": 27
+                }
+    
+
+    + Schema
+
+                {
+                    "type": "object",
+                    "properties": {
+                        "idNomina": {
+                            "type": "integer"
+                        }
+                    }
+                }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "id": 243,
+                        "idEmpresa": 5,
+                        "idConfiguracionNominaEntity": 27,
+                        "idNivelEducativo": 1,
+                        "autRvoe": "343533434"
+                    },
+                    {
+                        "id": 239,
+                        "idEmpresa": 5,
+                        "idConfiguracionNominaEntity": 27,
+                        "idNivelEducativo": 1,
+                        "autRvoe": "1234"
+                    },
+                    {
+                        "id": 238,
+                        "idEmpresa": 5,
+                        "idConfiguracionNominaEntity": 27,
+                        "idNivelEducativo": 1,
+                        "autRvoe": "1234"
+                    },
+                    {
+                        "id": 236,
+                        "idEmpresa": 5,
+                        "idConfiguracionNominaEntity": 27,
+                        "idNivelEducativo": 1,
+                        "autRvoe": "1234"
+                    },
+                    {
+                        "id": 234,
+                        "idEmpresa": 5,
+                        "idConfiguracionNominaEntity": 27,
+                        "idNivelEducativo": 1,
+                        "autRvoe": "1"
+                    }
+                ]
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "response": {
+                        "type": "array",
+                        "items": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "idEmpresa": {
+                                        "type": "integer"
+                                    },
+                                    "idConfiguracionNominaEntity": {
+                                        "type": "integer"
+                                    },
+                                    "idNivelEducativo": {
+                                        "type": "integer"
+                                    },
+                                    "autRvoe": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "idEmpresa": {
+                                        "type": "integer"
+                                    },
+                                    "idConfiguracionNominaEntity": {
+                                        "type": "integer"
+                                    },
+                                    "idNivelEducativo": {
+                                        "type": "integer"
+                                    },
+                                    "autRvoe": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "idEmpresa": {
+                                        "type": "integer"
+                                    },
+                                    "idConfiguracionNominaEntity": {
+                                        "type": "integer"
+                                    },
+                                    "idNivelEducativo": {
+                                        "type": "integer"
+                                    },
+                                    "autRvoe": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "idEmpresa": {
+                                        "type": "integer"
+                                    },
+                                    "idConfiguracionNominaEntity": {
+                                        "type": "integer"
+                                    },
+                                    "idNivelEducativo": {
+                                        "type": "integer"
+                                    },
+                                    "autRvoe": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "idEmpresa": {
+                                        "type": "integer"
+                                    },
+                                    "idConfiguracionNominaEntity": {
+                                        "type": "integer"
+                                    },
+                                    "idNivelEducativo": {
+                                        "type": "integer"
+                                    },
+                                    "autRvoe": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+
+
+
++ Response 220 (application/json)
+  Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+  Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+  Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+### Create Configuration [POST]
+
+Método para crear una configuracion de nivel educativo.
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 203        | Error de respuesta o parámetros inválidos       |
+        | 206        | No se encontraron los datos                     |
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+    
+
+    + Body
+    
+                {
+                    "idNivelEducativo": 1,
+                    "autRvoe": "1234",
+                    "idNomina": 27
+                }
+    
+
+    + Schema
+
+                {
+                    "type": "object",
+                    "properties": {
+                        "idNivelEducativo": {
+                            "type": "integer"
+                        },
+                        "autRvoe": {
+                            "type": "string"
+                        },
+                        "idNomina": {
+                            "type": "integer"
+                        }
+                    }
+                }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": "Consulta realizada correctamente Configuracion de Nivel Educativo registrada con el ID: 244"
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "response": {
+                        "type": "string"
+                    }
+                }
+            }
+
++ Response 220 (application/json)
+  Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+  Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+  Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+### Update Configuration [PUT]
+
+Método para actualizar una configuracion de nivel educativo.
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 203        | Error de respuesta o parámetros inválidos       |
+        | 206        | No se encontraron los datos                     |
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+    
+
+    + Body
+    
+                {
+                    "id": 242,
+                    "idNivelEducativo": 1,
+                    "autRvoe": "1234",
+                    "idNomina": 27
+                }
+    
+
+    + Schema
+
+                {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer"
+                        },
+                        "idNivelEducativo": {
+                            "type": "integer"
+                        },
+                        "autRvoe": {
+                            "type": "string"
+                        },
+                        "idNomina": {
+                            "type": "integer"
+                        }
+                    }
+                }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": "Consulta realizada correctamente"
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "response": {
+                        "type": "string"
+                    }
+                }
+            }
+
++ Response 220 (application/json)
+  Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+  Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+  Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+### Delete Configuracion [DELETE]
+
+Método para eliminar una configuracion de nivel educativo.
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 203        | Error de respuesta o parámetros inválidos       |
+        | 206        | No se encontraron los datos                     |
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+    
+
+    + Body
+    
+                {
+                    "id": 242,
+                    "idNivelEducativo": 1,
+                    "idNomina": 27
+                }
+    
+
+    + Schema
+
+                {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer"
+                        },
+                        "idNivelEducativo": {
+                            "type": "integer"
+                        },
+                        "idNomina": {
+                            "type": "integer"
+                        }
+                    }
+                }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": "Consulta realizada correctamente"
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "response": {
+                        "type": "string"
+                    }
+                }
+            }
+
++ Response 220 (application/json)
+  Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+  Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+  Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+## /corte-caja
+
+Recursos disponibles para obtener el estado de cuenta de una cuenta contable
+
+### Corte de Caja [POST]
+
+Método que consulta el estado de cuenta de una determinada cuenta contable, permitiendo el uso de ciertos filtros, por medio del API de SunPlusXtra.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 201 | Error Datos incorrectos                |
+        | 202 | Error de conexión al SunPlus                |
+        | 203 | Error de respuesta o parámetros inválidos                |
+        | 206 | Cuenta y/o Fecha Inicial vacía(s)                |
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+  
+            {
+                "cuenta" : "101110",
+                "fechaInicial" : "2018-06-30",
+                "fechaFinal" : "2018-06-30"
+            }
+            
+
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message" : "Cargado correctamente",
+                "response" : [
+                    {
+                        "allocRef": 4,
+                        "allocation": "C",
+                        "analT0": "",
+                        "analT1": "",
+                        "analT2": "",
+                        "analT3": "",
+                        "analT4": "",
+                        "analT5": "",
+                        "analT6": "",
+                        "analT7": "",
+                        "analT8": "",
+                        "analT9": "",
+                        "descriptn": "Corte de caja",
+                        "jrnalLine": 2,
+                        "jrnalNo": 54321,
+                        "period": 2018006,
+                        "transDateTime": "2018-06-30"
+                    },
+                    {
+                        "allocRef": 4,
+                        "allocation": "C",
+                        "analT0": "",
+                        "analT1": "",
+                        "analT2": "",
+                        "analT3": "",
+                        "analT4": "",
+                        "analT5": "",
+                        "analT6": "",
+                        "analT7": "",
+                        "analT8": "",
+                        "analT9": "",
+                        "descriptn": "Corte de caja",
+                        "jrnalLine": 2,
+                        "jrnalNo": 54321,
+                        "period": 2018006,
+                        "transDateTime": "2018-06-30"
+                    }
+                ]
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "message" : {
+                        "type" : "string"
+                    },
+                    "response": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "allocRef": {
+                                    "type": "integer"
+                                },
+                                "allocation": {
+                                    "type": "string"
+                                },
+                                "analT0": {
+                                    "type": "string"
+                                },
+                                "analT1": {
+                                    "type": "string"
+                                },
+                                "analT2": {
+                                    "type": "string"
+                                },
+                                "analT3": {
+                                    "type": "string"
+                                },
+                                "analT4": {
+                                    "type": "string"
+                                },
+                                "analT5": {
+                                    "type": "string"
+                                },
+                                "analT6": {
+                                    "type": "string"
+                                },
+                                "analT7": {
+                                    "type": "string"
+                                },
+                                "analT8": {
+                                    "type": "string"
+                                },
+                                "analT9": {
+                                    "type": "string"
+                                },
+                                "descriptn": {
+                                    "type": "string"
+                                },
+                                "jrnalLine": {
+                                    "type": "integer"
+                                },
+                                "jrnalNo": {
+                                    "type": "integer"
+                                },
+                                "period": {
+                                    "type": "integer",
+                                    "format" : "yyyy'0mm"
+                                },
+                                "transDateTime": {
+                                    "type": "string",
+                                    "format" : "yyyy-mm-dd"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
++ Response 220 (application/json)
+  Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+  Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+  Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+## /ledger-definition
+
+Recursos disponibles para obtener la información de los periodos abiertos y activos
+
+### Ledger Definition [GET]
+
+Método que permite obtener la información de los periodos abiertos y activos en el SunPlus, por medio del API de SunPlusXtra.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 202 | Error en la información enviada                |
+        | 203 | Error de respuesta o parámetros inválidos                |
+        | 206 | No se encontraron los datos                |
+
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": {
+                    "currentPeriod": "2018006",
+                    "fromPeriod": "2018001 ",
+                    "toPeriod": "2020012 "
+                }
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+## /genealogy
+
+Recursos que permiten obtener el listado de la genealogía de las uniones
+
+### Genealogía [GET]
+
+Método que permite obtener la información de las empresas que se encuentren debajo de la estructura del usuario de SunPlusXtra.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 203 | Error de respuesta o parámetros inválidos                |
+
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            "message": "Consulta correcta",
+                "response": [
+                    {
+                        "_key": "13472430",
+                        "empresaPadre": {
+                            "_key": "1296709",
+                            "id": 11,
+                            "nombre": "K11 Interoceanica",
+                            "razonSocial": "IGLESIA ADVENTISTA DEL SEPTIMO DIA UNION INTEROCEANICA AR",
+                            "tipo": "empresa",
+                            "empresaFinal": false
+                        },
+                        "empresaHija": {
+                            "_key": "1296809",
+                            "id": 31,
+                            "nombre": "D11 Alpina",
+                            "razonSocial": "Iglesia Adventista del Septimo Dia Seccion Alpina AR",
+                            "tipo": "empresa",
+                            "empresaFinal": false
+                        },
+                        "idFrom": 11,
+                        "idTo": 31
+                    },
+                    {
+                        "_key": "24442525",
+                        "empresaPadre": {
+                            "_key": "1296709",
+                            "id": 11,
+                            "nombre": "K11 Interoceanica",
+                            "razonSocial": "IGLESIA ADVENTISTA DEL SEPTIMO DIA UNION INTEROCEANICA AR",
+                            "tipo": "empresa",
+                            "empresaFinal": false
+                        },
+                        "empresaHija": {
+                            "_key": "24442523",
+                            "id": 72,
+                            "nombre": "FEHV Filantrópica Hidalgo Veracruzana",
+                            "razonSocial": "Filantrópica y Educativa Hidalgo Veracruzana AC",
+                            "tipo": "empresa",
+                            "empresaFinal": null
+                        },
+                        "idFrom": 11,
+                        "idTo": 72
+                    },
+                    {
+                        "_key": "29152942",
+                        "empresaPadre": {
+                            "_key": "1296709",
+                            "id": 11,
+                            "nombre": "K11 Interoceanica",
+                            "razonSocial": "IGLESIA ADVENTISTA DEL SEPTIMO DIA UNION INTEROCEANICA AR",
+                            "tipo": "empresa",
+                            "empresaFinal": false
+                        },
+                        "empresaHija": {
+                            "_key": "24410923",
+                            "id": 71,
+                            "nombre": "FEI Filantrópica del Istmo",
+                            "razonSocial": "Filantrópica y Educativa del Istmo AC",
+                            "tipo": "empresa",
+                            "empresaFinal": null
+                        },
+                        "idFrom": 11,
+                        "idTo": 71
+                    },
+                    {
+                        "_key": "24443373",
+                        "empresaPadre": {
+                            "_key": "1296709",
+                            "id": 11,
+                            "nombre": "K11 Interoceanica",
+                            "razonSocial": "IGLESIA ADVENTISTA DEL SEPTIMO DIA UNION INTEROCEANICA AR",
+                            "tipo": "empresa",
+                            "empresaFinal": false
+                        },
+                        "empresaHija": {
+                            "_key": "24443371",
+                            "id": 73,
+                            "nombre": "FEOAC  Filantrópica de Oaxaca",
+                            "razonSocial": "Filantópica y Educativa Oaxaca AC",
+                            "tipo": "empresa",
+                            "empresaFinal": null
+                        },
+                        "idFrom": 11,
+                        "idTo": 73
+                    },
+                    {
+                        "_key": "29157908",
+                        "empresaPadre": {
+                            "_key": "1296709",
+                            "id": 11,
+                            "nombre": "K11 Interoceanica",
+                            "razonSocial": "IGLESIA ADVENTISTA DEL SEPTIMO DIA UNION INTEROCEANICA AR",
+                            "tipo": "empresa",
+                            "empresaFinal": false
+                        },
+                        "empresaHija": {
+                            "_key": "24443971",
+                            "id": 74,
+                            "nombre": "FEOAC Filantrópica Olmeca",
+                            "razonSocial": "Filantrópica y Educativa Olmeca AC",
+                            "tipo": "empresa",
+                            "empresaFinal": null
+                        },
+                        "idFrom": 11,
+                        "idTo": 74
+                    },
+
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }

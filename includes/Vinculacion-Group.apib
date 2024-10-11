@@ -1,0 +1,608 @@
+# Group Vinculación de Comprobantes
+
+
+## /vincula-comprobante
+### Vincular Comprobante [POST]
+
+Método para vincular un comprobante a un diario.
+Tiene dos niveles de validación y de respuesta, el nivel principal, valida la estructura y los diarios y en segundo lugar la lista de comprobantes a vincular.
+La respuesta también tiene esos mismos niveles, ya que se devuelve la vinculación por cada comprobante enviado en el arreglo y sus códigos de validación correspondientes.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 202 | El Journal Number es null o vacío                |
+        | 203 | Tipo de comprobante incompatible o no es admitido                |
+        | 204 | La lista de comprobantes está vacía                |
+        | 207 | El RFC no coincide con el de la empresa                |
+        | 208 | XML a relacionar es inválido (validación por elemento)                |
+        | 209 | La póliza no existe o el tipo de póliza es incorrecto                |
+        | 210 | El número de línea es incorrecto o no existe                |
+        | 211 | Al menos uno de los comprobantes ya existe o es incorrecto                |
+        | 213 | No es posible relacionar el comprobante, tipo de relación incorrecta                |
+
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "journalNumber" : "32178",
+                "journalLine" : "",
+                "rfc" : "IAS930628FA8",
+                "comprobantes" : [
+                    "6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8",
+                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?><cfdi:Comprobante xmlns:cfdi=\"http://www.sat.gob.mx/cfd/4\" xmlns:cce11=\"http://www.sat.gob.mx/ComercioExterior11\" xmlns:donat=\"http://www.sat.gob.mx/donat\" xmlns:iedu=\"http://www.sat.gob.mx/iedu\" xmlns:nomina12=\"http://www.sat.gob.mx/nomina12\" xmlns:pago20=\"http://www.sat.gob.mx/Pagos20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Certificado=\"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\" Descuento=\"0.00\" Exportacion=\"01\" Fecha=\"2023-09-01T08:58:28\" Folio=\"8750\" FormaPago=\"03\" LugarExpedicion=\"67510\" MetodoPago=\"PUE\" Moneda=\"MXN\" NoCertificado=\"00001000000700517783\" Sello=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" Serie=\"A\" SubTotal=\"27679.05\" TipoDeComprobante=\"I\" Total=\"27679.05\" Version=\"4.0\" xsi:schemaLocation=\"http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/ComercioExterior11 http://www.sat.gob.mx/sitio_internet/cfd/ComercioExterior11/ComercioExterior11.xsd http://www.sat.gob.mx/donat http://www.sat.gob.mx/sitio_internet/cfd/donat/donat11.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd http://www.sat.gob.mx/iedu http://www.sat.gob.mx/sitio_internet/cfd/iedu/iedu.xsd http://www.sat.gob.mx/Pagos20 http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos20.xsd \"><cfdi:Emisor Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA\" RegimenFiscal=\"603\" Rfc=\"IAS930628FA8\" /><cfdi:Receptor DomicilioFiscalReceptor=\"50160\" Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA SECCION DEL VALLE DE MEXICO\" RegimenFiscalReceptor=\"603\" Rfc=\"IAS160818JK6\" UsoCFDI=\"G03\" /><cfdi:Conceptos><cfdi:Concepto Cantidad=\"1\" ClaveProdServ=\"94111901\" ClaveUnidad=\"ACT\" Descripcion=\"Diezmos y Ofrendas. 31 de agosto de 2023\" Descuento=\"0.00\" Importe=\"27679.05\" NoIdentificacion=\"1\" ObjetoImp=\"01\" ValorUnitario=\"27679.05\" /></cfdi:Conceptos><cfdi:Complemento><tfd:TimbreFiscalDigital xmlns:tfd=\"http://www.sat.gob.mx/TimbreFiscalDigital\" xsi:schemaLocation=\"http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Version=\"1.1\" UUID=\"6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8\" FechaTimbrado=\"2023-09-01T08:58:30\" RfcProvCertif=\"SCD110105654\" SelloCFD=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" NoCertificadoSAT=\"00001000000502000436\" SelloSAT=\"rPLbpAUuEEDPIpzZpMKRv/TGvvqpR7RxxZEvmE41+bM6YcIS2rMO2jDTTK2Ojl6+xyeIG8tbTQvL2zR6MtGvXAb+RobdoG77ZbUgUnJAMe5kNEs6Rws6D38iva5yUcS7xnQqUJ7/+o9DNdwTLG3wyE1W0hZrv3k7pfve6THc2nU1oXgBNsPD2SrdI8Xf7iexZGhuUQpudBcBeoMs/UJfK/MaeCup2pXJ29iioeSAQJUdB5ffxTFodHAvnBl/6Xuh4lwH+YTj9mIAiNcSS2YVZauB4U+g2Xvw8qDMgQvJPwFYKsGmv+CChfRs0Cvzi8F5cV6FcTfDELHB060PdGBCuQ==\" /></cfdi:Complemento></cfdi:Comprobante>"
+                ],
+                "extensionFiles" : [
+                    "uuid",
+                    "xml"
+                ],
+                "importeAVincular" : [
+                    "1200.00",
+                    "2000.00"
+                ],
+                "desvincular" : true
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "journalNumber": {
+                        "type": "string"
+                    },
+                    "rfc" : {
+                        "type" : "string"
+                    },
+                    "comprobantes": {
+                        "type" : "array",
+                        "items": {
+                            "type": "string",
+                        }
+                    },
+                    "extensionFiles" : {
+                        "type" : "array",
+                        "items": {
+                            "type": "string",
+                        }
+                    },
+                    "importeAVincular" : {
+                        "type" : "array",
+                        "items": {
+                            "type": "string",
+                        }
+                    },
+                    "desvincular" : {
+                        "type" : "boolean"
+                    }
+                }
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Acción realizada",
+                "comprobantes" : {
+                    "{{INDEX_COMPROBANTE}}" : {
+                        "codigo" : "",
+                        "descripcionRespuesta" : ""
+                    }
+                }
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "comprobantes": {
+                        "1": {
+                            "codigo": "208",
+                            "descripcionRespuesta": "El comprobante con uuid = 6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8 ya ha sido cargado anteriormente"
+                        }
+                    },
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+
+## /vincula-comprobante-lineas
+### Vincular Comprobante por líneas [POST]
+
+Método para vincular varios comprobantes a varias líneas de un mismo diario.
+Tiene dos niveles de validación y de respuesta, el nivel principal, valida la estructura y en segundo lugar la lista de comprobantes y líneas a vincular.
+La respuesta también tiene esos mismos niveles, ya que se devuelve la vinculación por cada comprobante enviado en el arreglo y sus códigos de validación correspondientes.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 202 | El Journal Number es null o vacío                |
+        | 203 | Tipo de comprobante incompatible o no es admitido                |
+        | 204 | No hay comprobantes a vincula                |
+        | 207 | El RFC no coincide con el de la empresa                |
+        | 208 | XML a relacionar es inválido (validación por elemento)                |
+        | 209 | La póliza no existe o el tipo de póliza es incorrecto                |
+        | 213 | No es posible relacionar el comprobante, tipo de relación incorrecta                |
+
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "journalNumber" : "5432",
+                "rfc" : "IAS930628FA8",
+                "requestDataVinculaComprobantes" : [
+                    {
+                        "journalLine" : "1",
+                        "comprobantes" : [
+                            "XXXXX-BBBBB",
+                            "YYYYY-DDDDD"
+                        ],
+                        "importeAVincular" : [
+                            "100.00",
+                            "200.00"
+                        ]
+                    },
+                    {
+                        "journalLine" : "2",
+                        "comprobantes" : [
+                            "AAAAA-BBBBB",
+                            "CCCCC-DDDDD"
+                        ],
+                        "importeAVincular" : [
+                            "1200.00",
+                            "2000.00"
+                        ]
+                    }
+                ],
+                "desvincular" : true
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "journalNumber": {
+                        "type": "string"
+                    },
+                    "rfc" : {
+                        "type" : "string"
+                    },
+                    "requestDataVinculaComprobantes": {
+                        "type" : "array",
+                        "items": {
+                            "type": "object",
+                            "properties" : {
+                                "journalLine" : {
+                                    "type" : "string",
+                                    "required" : true
+                                },
+                                "comprobantes": {
+                                    "type" : "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "importeAVincular" : {
+                                    "type" : "array",
+                                    "items": {
+                                        "type": "string",
+                                        "format" : "numeric"
+                                    }
+                                },
+                            }
+                        }
+                    },
+                    "desvincular" : {
+                        "type" : "boolean"
+                    }
+                }
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Acción realizada",
+
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "lineas": {},
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+## /set-comprobante
+### Set Comprobante [POST]
+
+Método para vincular varios comprobantes a un diario, el importe se divide entre los comprobantes.
+Tiene dos niveles de validación y de respuesta, el nivel principal, valida la estructura y los diarios y en segundo lugar la lista de comprobantes a vincular.
+La respuesta también tiene esos mismos niveles, ya que se devuelve la vinculación por cada comprobante enviado en el arreglo y sus códigos de validación correspondientes.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 202 | El Journal Number es null o vacío                |
+        | 203 | Tipo de comprobante incompatible o no es admitido                |
+        | 204 | La lista de comprobantes está vacía                |
+        | 207 | El RFC no coincide con el de la empresa                |
+        | 208 | XML a relacionar es inválido (validación por elemento)                |
+        | 209 | La póliza no existe o el tipo de póliza es incorrecto                |
+        | 210 | El número de línea es incorrecto o no existe                |
+        | 211 | Al menos uno de los comprobantes ya existe o es incorrecto                |
+        | 213 | No es posible relacionar el comprobante, tipo de relación incorrecta                |
+
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "journalNumber" : "32178",
+                "journalLine" : "",
+                "rfc" : "IAS930628FA8",
+                "comprobantes" : [
+                    "<cfdi:Comprobante xmlns:cfdi=\"http://www.sat.gob.mx/cfd/4\" xmlns:cce11=\"http://www.sat.gob.mx/ComercioExterior11\" xmlns:donat=\"http://www.sat.gob.mx/donat\" xmlns:iedu=\"http://www.sat.gob.mx/iedu\" xmlns:nomina12=\"http://www.sat.gob.mx/nomina12\" xmlns:pago20=\"http://www.sat.gob.mx/Pagos20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Certificado=\"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\" Descuento=\"0.00\" Exportacion=\"01\" Fecha=\"2023-09-01T08:58:28\" Folio=\"8750\" FormaPago=\"03\" LugarExpedicion=\"67510\" MetodoPago=\"PUE\" Moneda=\"MXN\" NoCertificado=\"00001000000700517783\" Sello=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" Serie=\"A\" SubTotal=\"27679.05\" TipoDeComprobante=\"I\" Total=\"27679.05\" Version=\"4.0\" xsi:schemaLocation=\"http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/ComercioExterior11 http://www.sat.gob.mx/sitio_internet/cfd/ComercioExterior11/ComercioExterior11.xsd http://www.sat.gob.mx/donat http://www.sat.gob.mx/sitio_internet/cfd/donat/donat11.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd http://www.sat.gob.mx/iedu http://www.sat.gob.mx/sitio_internet/cfd/iedu/iedu.xsd http://www.sat.gob.mx/Pagos20 http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos20.xsd \"><cfdi:Emisor Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA\" RegimenFiscal=\"603\" Rfc=\"IAS930628FA8\" /><cfdi:Receptor DomicilioFiscalReceptor=\"50160\" Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA SECCION DEL VALLE DE MEXICO\" RegimenFiscalReceptor=\"603\" Rfc=\"IAS160818JK6\" UsoCFDI=\"G03\" /><cfdi:Conceptos><cfdi:Concepto Cantidad=\"1\" ClaveProdServ=\"94111901\" ClaveUnidad=\"ACT\" Descripcion=\"Diezmos y Ofrendas. 31 de agosto de 2023\" Descuento=\"0.00\" Importe=\"27679.05\" NoIdentificacion=\"1\" ObjetoImp=\"01\" ValorUnitario=\"27679.05\" /></cfdi:Conceptos><cfdi:Complemento><tfd:TimbreFiscalDigital xmlns:tfd=\"http://www.sat.gob.mx/TimbreFiscalDigital\" xsi:schemaLocation=\"http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Version=\"1.1\" UUID=\"6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8\" FechaTimbrado=\"2023-09-01T08:58:30\" RfcProvCertif=\"SCD110105654\" SelloCFD=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" NoCertificadoSAT=\"00001000000502000436\" SelloSAT=\"rPLbpAUuEEDPIpzZpMKRv/TGvvqpR7RxxZEvmE41+bM6YcIS2rMO2jDTTK2Ojl6+xyeIG8tbTQvL2zR6MtGvXAb+RobdoG77ZbUgUnJAMe5kNEs6Rws6D38iva5yUcS7xnQqUJ7/+o9DNdwTLG3wyE1W0hZrv3k7pfve6THc2nU1oXgBNsPD2SrdI8Xf7iexZGhuUQpudBcBeoMs/UJfK/MaeCup2pXJ29iioeSAQJUdB5ffxTFodHAvnBl/6Xuh4lwH+YTj9mIAiNcSS2YVZauB4U+g2Xvw8qDMgQvJPwFYKsGmv+CChfRs0Cvzi8F5cV6FcTfDELHB060PdGBCuQ==\" /></cfdi:Complemento></cfdi:Comprobante>",
+                    "<cfdi:Comprobante xmlns:cfdi=\"http://www.sat.gob.mx/cfd/4\" xmlns:cce11=\"http://www.sat.gob.mx/ComercioExterior11\" xmlns:donat=\"http://www.sat.gob.mx/donat\" xmlns:iedu=\"http://www.sat.gob.mx/iedu\" xmlns:nomina12=\"http://www.sat.gob.mx/nomina12\" xmlns:pago20=\"http://www.sat.gob.mx/Pagos20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Certificado=\"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\" Descuento=\"0.00\" Exportacion=\"01\" Fecha=\"2023-09-01T08:58:28\" Folio=\"8750\" FormaPago=\"03\" LugarExpedicion=\"67510\" MetodoPago=\"PUE\" Moneda=\"MXN\" NoCertificado=\"00001000000700517783\" Sello=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" Serie=\"A\" SubTotal=\"27679.05\" TipoDeComprobante=\"I\" Total=\"27679.05\" Version=\"4.0\" xsi:schemaLocation=\"http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/ComercioExterior11 http://www.sat.gob.mx/sitio_internet/cfd/ComercioExterior11/ComercioExterior11.xsd http://www.sat.gob.mx/donat http://www.sat.gob.mx/sitio_internet/cfd/donat/donat11.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd http://www.sat.gob.mx/iedu http://www.sat.gob.mx/sitio_internet/cfd/iedu/iedu.xsd http://www.sat.gob.mx/Pagos20 http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos20.xsd \"><cfdi:Emisor Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA\" RegimenFiscal=\"603\" Rfc=\"IAS930628FA8\" /><cfdi:Receptor DomicilioFiscalReceptor=\"50160\" Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA SECCION DEL VALLE DE MEXICO\" RegimenFiscalReceptor=\"603\" Rfc=\"IAS160818JK6\" UsoCFDI=\"G03\" /><cfdi:Conceptos><cfdi:Concepto Cantidad=\"1\" ClaveProdServ=\"94111901\" ClaveUnidad=\"ACT\" Descripcion=\"Diezmos y Ofrendas. 31 de agosto de 2023\" Descuento=\"0.00\" Importe=\"27679.05\" NoIdentificacion=\"1\" ObjetoImp=\"01\" ValorUnitario=\"27679.05\" /></cfdi:Conceptos><cfdi:Complemento><tfd:TimbreFiscalDigital xmlns:tfd=\"http://www.sat.gob.mx/TimbreFiscalDigital\" xsi:schemaLocation=\"http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Version=\"1.1\" UUID=\"6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8\" FechaTimbrado=\"2023-09-01T08:58:30\" RfcProvCertif=\"SCD110105654\" SelloCFD=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" NoCertificadoSAT=\"00001000000502000436\" SelloSAT=\"rPLbpAUuEEDPIpzZpMKRv/TGvvqpR7RxxZEvmE41+bM6YcIS2rMO2jDTTK2Ojl6+xyeIG8tbTQvL2zR6MtGvXAb+RobdoG77ZbUgUnJAMe5kNEs6Rws6D38iva5yUcS7xnQqUJ7/+o9DNdwTLG3wyE1W0hZrv3k7pfve6THc2nU1oXgBNsPD2SrdI8Xf7iexZGhuUQpudBcBeoMs/UJfK/MaeCup2pXJ29iioeSAQJUdB5ffxTFodHAvnBl/6Xuh4lwH+YTj9mIAiNcSS2YVZauB4U+g2Xvw8qDMgQvJPwFYKsGmv+CChfRs0Cvzi8F5cV6FcTfDELHB060PdGBCuQ==\" /></cfdi:Complemento></cfdi:Comprobante>"
+                ],
+                "extensionFiles" : "xml",
+                "importeAVincular" : "1200.00"
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "journalNumber": {
+                        "type": "string"
+                    },
+                    "rfc" : {
+                        "type" : "string"
+                    },
+                    "comprobantes": {
+                        "type" : "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "extensionFiles" : {
+                        "type" : "string"
+                    },
+                    "importeAVincular" : {
+                        "type" : "string",
+                        "format": "numeric"
+                    }
+                }
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Acción realizada",
+                "comprobantes" : {
+                    "{{INDEX_COMPROBANTE}}" : {
+                        "codigo" : "",
+                        "descripcionRespuesta" : ""
+                    }
+                }
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "comprobantes": {
+                        "1": {
+                            "codigo": "208",
+                            "descripcionRespuesta": "El comprobante con uuid = 6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8 ya ha sido cargado anteriormente"
+                        }
+                    },
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+## /upload-comprobantes
+### Upload Comprobantes [POST]
+
+Método subir varios comprobantes a la base de datos del SunPLusXtra, de tal forma que se puedan relacionar con una póliza.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código    | Descripción                                           |
+        |-----------|-------------------------------------------------------|
+        | 204       | La lista de comprobantes está vacía                   |
+        | 207       | El RFC no coincide con el de la empresa               |
+        | 208       | XML a subir es inválido (validación por elemento)     |
+
+
+Tabla `{MENSAJE_ERROR}`, Lista de mensajes de error en los comprobantes
+
+        | {MENSAJE_ERROR}                                                       |
+        |---------------------------------------------------------------|
+        | No se encontro comprobante                                    |
+        | El comprobante cargado no es valido                           |
+        | El comprobante con uuid = {UUID} ya sido cargado anteriormente  |
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "rfc" : "IAS930628FA8",
+                "comprobantes" : [
+                    "<cfdi:Comprobante xmlns:cfdi=\"http://www.sat.gob.mx/cfd/4\" xmlns:cce11=\"http://www.sat.gob.mx/ComercioExterior11\" xmlns:donat=\"http://www.sat.gob.mx/donat\" xmlns:iedu=\"http://www.sat.gob.mx/iedu\" xmlns:nomina12=\"http://www.sat.gob.mx/nomina12\" xmlns:pago20=\"http://www.sat.gob.mx/Pagos20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Certificado=\"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\" Descuento=\"0.00\" Exportacion=\"01\" Fecha=\"2023-09-01T08:58:28\" Folio=\"8750\" FormaPago=\"03\" LugarExpedicion=\"67510\" MetodoPago=\"PUE\" Moneda=\"MXN\" NoCertificado=\"00001000000700517783\" Sello=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" Serie=\"A\" SubTotal=\"27679.05\" TipoDeComprobante=\"I\" Total=\"27679.05\" Version=\"4.0\" xsi:schemaLocation=\"http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/ComercioExterior11 http://www.sat.gob.mx/sitio_internet/cfd/ComercioExterior11/ComercioExterior11.xsd http://www.sat.gob.mx/donat http://www.sat.gob.mx/sitio_internet/cfd/donat/donat11.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd http://www.sat.gob.mx/iedu http://www.sat.gob.mx/sitio_internet/cfd/iedu/iedu.xsd http://www.sat.gob.mx/Pagos20 http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos20.xsd \"><cfdi:Emisor Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA\" RegimenFiscal=\"603\" Rfc=\"IAS930628FA8\" /><cfdi:Receptor DomicilioFiscalReceptor=\"50160\" Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA SECCION DEL VALLE DE MEXICO\" RegimenFiscalReceptor=\"603\" Rfc=\"IAS160818JK6\" UsoCFDI=\"G03\" /><cfdi:Conceptos><cfdi:Concepto Cantidad=\"1\" ClaveProdServ=\"94111901\" ClaveUnidad=\"ACT\" Descripcion=\"Diezmos y Ofrendas. 31 de agosto de 2023\" Descuento=\"0.00\" Importe=\"27679.05\" NoIdentificacion=\"1\" ObjetoImp=\"01\" ValorUnitario=\"27679.05\" /></cfdi:Conceptos><cfdi:Complemento><tfd:TimbreFiscalDigital xmlns:tfd=\"http://www.sat.gob.mx/TimbreFiscalDigital\" xsi:schemaLocation=\"http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Version=\"1.1\" UUID=\"6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8\" FechaTimbrado=\"2023-09-01T08:58:30\" RfcProvCertif=\"SCD110105654\" SelloCFD=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" NoCertificadoSAT=\"00001000000502000436\" SelloSAT=\"rPLbpAUuEEDPIpzZpMKRv/TGvvqpR7RxxZEvmE41+bM6YcIS2rMO2jDTTK2Ojl6+xyeIG8tbTQvL2zR6MtGvXAb+RobdoG77ZbUgUnJAMe5kNEs6Rws6D38iva5yUcS7xnQqUJ7/+o9DNdwTLG3wyE1W0hZrv3k7pfve6THc2nU1oXgBNsPD2SrdI8Xf7iexZGhuUQpudBcBeoMs/UJfK/MaeCup2pXJ29iioeSAQJUdB5ffxTFodHAvnBl/6Xuh4lwH+YTj9mIAiNcSS2YVZauB4U+g2Xvw8qDMgQvJPwFYKsGmv+CChfRs0Cvzi8F5cV6FcTfDELHB060PdGBCuQ==\" /></cfdi:Complemento></cfdi:Comprobante>",
+                    "<cfdi:Comprobante xmlns:cfdi=\"http://www.sat.gob.mx/cfd/4\" xmlns:cce11=\"http://www.sat.gob.mx/ComercioExterior11\" xmlns:donat=\"http://www.sat.gob.mx/donat\" xmlns:iedu=\"http://www.sat.gob.mx/iedu\" xmlns:nomina12=\"http://www.sat.gob.mx/nomina12\" xmlns:pago20=\"http://www.sat.gob.mx/Pagos20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Certificado=\"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\" Descuento=\"0.00\" Exportacion=\"01\" Fecha=\"2023-09-01T08:58:28\" Folio=\"8750\" FormaPago=\"03\" LugarExpedicion=\"67510\" MetodoPago=\"PUE\" Moneda=\"MXN\" NoCertificado=\"00001000000700517783\" Sello=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" Serie=\"A\" SubTotal=\"27679.05\" TipoDeComprobante=\"I\" Total=\"27679.05\" Version=\"4.0\" xsi:schemaLocation=\"http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/ComercioExterior11 http://www.sat.gob.mx/sitio_internet/cfd/ComercioExterior11/ComercioExterior11.xsd http://www.sat.gob.mx/donat http://www.sat.gob.mx/sitio_internet/cfd/donat/donat11.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd http://www.sat.gob.mx/iedu http://www.sat.gob.mx/sitio_internet/cfd/iedu/iedu.xsd http://www.sat.gob.mx/Pagos20 http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos20.xsd \"><cfdi:Emisor Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA\" RegimenFiscal=\"603\" Rfc=\"IAS930628FA8\" /><cfdi:Receptor DomicilioFiscalReceptor=\"50160\" Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA SECCION DEL VALLE DE MEXICO\" RegimenFiscalReceptor=\"603\" Rfc=\"IAS160818JK6\" UsoCFDI=\"G03\" /><cfdi:Conceptos><cfdi:Concepto Cantidad=\"1\" ClaveProdServ=\"94111901\" ClaveUnidad=\"ACT\" Descripcion=\"Diezmos y Ofrendas. 31 de agosto de 2023\" Descuento=\"0.00\" Importe=\"27679.05\" NoIdentificacion=\"1\" ObjetoImp=\"01\" ValorUnitario=\"27679.05\" /></cfdi:Conceptos><cfdi:Complemento><tfd:TimbreFiscalDigital xmlns:tfd=\"http://www.sat.gob.mx/TimbreFiscalDigital\" xsi:schemaLocation=\"http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Version=\"1.1\" UUID=\"6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8\" FechaTimbrado=\"2023-09-01T08:58:30\" RfcProvCertif=\"SCD110105654\" SelloCFD=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" NoCertificadoSAT=\"00001000000502000436\" SelloSAT=\"rPLbpAUuEEDPIpzZpMKRv/TGvvqpR7RxxZEvmE41+bM6YcIS2rMO2jDTTK2Ojl6+xyeIG8tbTQvL2zR6MtGvXAb+RobdoG77ZbUgUnJAMe5kNEs6Rws6D38iva5yUcS7xnQqUJ7/+o9DNdwTLG3wyE1W0hZrv3k7pfve6THc2nU1oXgBNsPD2SrdI8Xf7iexZGhuUQpudBcBeoMs/UJfK/MaeCup2pXJ29iioeSAQJUdB5ffxTFodHAvnBl/6Xuh4lwH+YTj9mIAiNcSS2YVZauB4U+g2Xvw8qDMgQvJPwFYKsGmv+CChfRs0Cvzi8F5cV6FcTfDELHB060PdGBCuQ==\" /></cfdi:Complemento></cfdi:Comprobante>",
+                    "<cfdi:Comprobante xmlns:cfdi=\"http://www.sat.gob.mx/cfd/4\" xmlns:cce11=\"http://www.sat.gob.mx/ComercioExterior11\" xmlns:donat=\"http://www.sat.gob.mx/donat\" xmlns:iedu=\"http://www.sat.gob.mx/iedu\" xmlns:nomina12=\"http://www.sat.gob.mx/nomina12\" xmlns:pago20=\"http://www.sat.gob.mx/Pagos20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Certificado=\"MIIGSjCCBDKgAwIBAgIUMDAwMDEwMDAwMDA3MDA1MTc3ODMwDQYJKoZIhvcNAQELBQAwggGVMTUwMwYDVQQDDCxBQyBERUwgU0VSVklDSU8gREUgQURNSU5JU1RSQUNJT04gVFJJQlVUQVJJQTEuMCwGA1UECgwlU0VSVklDSU8gREUgQURNSU5JU1RSQUNJT04gVFJJQlVUQVJJQTEaMBgGA1UECwwRU0FULUlFUyBBdXRob3JpdHkxMjAwBgkqhkiG9w0BCQEWI3NlcnZpY2lvc2FsY29udHJpYnV5ZW50ZUBzYXQuZ29iLm14MSYwJAYDVQQJDB1Bdi4gSGlkYWxnbyA3NywgQ29sLiBHdWVycmVybzEOMAwGA1UEEQwFMDYzMDAxCzAJBgNVBAYTAk1YMQ0wCwYDVQQIDARDRE1YMRMwEQYDVQQHDApDVUFVSFRFTU9DMRUwEwYDVQQtEwxTQVQ5NzA3MDFOTjMxXDBaBgkqhkiG9w0BCQITTXJlc3BvbnNhYmxlOiBBRE1JTklTVFJBQ0lPTiBDRU5UUkFMIERFIFNFUlZJQ0lPUyBUUklCVVRBUklPUyBBTCBDT05UUklCVVlFTlRFMB4XDTIzMDYxNjE5MzYzNVoXDTI3MDYxNjE5MzYzNVowggEGMS4wLAYDVQQDEyVJR0xFU0lBIEFEVkVOVElTVEEgREVMIFNFUFRJTU8gRElBIEFSMS4wLAYDVQQpEyVJR0xFU0lBIEFEVkVOVElTVEEgREVMIFNFUFRJTU8gRElBIEFSMS4wLAYDVQQKEyVJR0xFU0lBIEFEVkVOVElTVEEgREVMIFNFUFRJTU8gRElBIEFSMSUwIwYDVQQtExxJQVM5MzA2MjhGQTggLyBURUdFODYwNzIySUY2MR4wHAYDVQQFExUgLyBURUdFODYwNzIySERGTFJSMDMxLTArBgNVBAsTJElHTEVTSUEgQURWRU5USVNBIERFTCBTRVBUSU1PIERJQSBBUjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAM9Ri48mNnQD3o2yTU1Oo2vBRc6kx9wXTHu3fsZZl3EAQq0DRZMd1AdouRu0KYgxR47WmRaHe7brKP5ilS1zDDFAxZjJm/LJyqI7YS7kWdHMLVkqpaWUdPEjWveER2A4oZ1DSChna8PHrZP18b299Fmc/6nzvXVxMU5yVRliQLceUiRrszHZyNvhu8IRCDuQT8mEaYN10GXo1U6jCsWZXFTqkLsN415uqMnInJ4e8WZj1KevM6KIAJYzmh/AD5dM7M/0F7qqBn90isgSYy0iZR1tt5jmu6g+oIBoOpMMg/jMwjI9dGM/IuI031bRloS6NqMZYDF5GLLZIlpIKhYNzGsCAwEAAaMdMBswDAYDVR0TAQH/BAIwADALBgNVHQ8EBAMCBsAwDQYJKoZIhvcNAQELBQADggIBADYjUfnfO2UMs1p9Hxp3nTgXdMbXLgc48SrnQlAbyoqO50IILCnGxkNw1TUCKIDWgpuqMPkP5++F/WhWA/oQLEG7HdD2HvuSx7kPucTWh+MzSeiM6wpqR7ZElsLCybK9UQNZHuMDTyHujnA+qt1c6Rl1oO9nAKUKJ+iukr2e99Q/WZg5Hr9ORqZFZyyQOjeA0fZA1wfquEGGj00/Ma2rjUJ0PIvdlU06UtfUPMAkLkbNlDCopCpA5x5ZocpO/++Z5sMBV+uHbJChy4uQm3mggi8vRmsVoe3vj4X+09dqWVRhNAxqjPO+uqlSJGV8VeSk9EEo7BZ50oi1bUFAx/oZuEy3GH/SXKvJWnjoy7uYzXTa4MXyHfgmIxeoQgeuXYba3MmI9coOzhrMEvMMQMfQy3Use3HU5jSk7C20Y3b3empxObiRro1JnTFRtQRa6pU9HjVksJcs6FQo6twzWmz8ztEfLv9/iXUujwuLDuYpQWgw6HVhumDg5tnJh4k54gGMtUK/JSk+BU5c9u1p3UlXxPsCsE7U1CmOMKfRUY1+L2EwbLAtdjSXin7iLFiIB3arVlW0oiF3X26z3BFXg/JOXbdar9wNBMvHhPVhT9MjlzE58zXYxjBBlZbmcLxhQiYygffY24a8iZbL7o/8QqOrneMIMOk7lqNSeZF/G3TksTuY\" Descuento=\"0.00\" Exportacion=\"01\" Fecha=\"2023-09-01T08:58:28\" Folio=\"8750\" FormaPago=\"03\" LugarExpedicion=\"67510\" MetodoPago=\"PUE\" Moneda=\"MXN\" NoCertificado=\"00001000000700517783\" Sello=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" Serie=\"A\" SubTotal=\"27679.05\" TipoDeComprobante=\"I\" Total=\"27679.05\" Version=\"4.0\" xsi:schemaLocation=\"http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/ComercioExterior11 http://www.sat.gob.mx/sitio_internet/cfd/ComercioExterior11/ComercioExterior11.xsd http://www.sat.gob.mx/donat http://www.sat.gob.mx/sitio_internet/cfd/donat/donat11.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd http://www.sat.gob.mx/iedu http://www.sat.gob.mx/sitio_internet/cfd/iedu/iedu.xsd http://www.sat.gob.mx/Pagos20 http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos20.xsd \"><cfdi:Emisor Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA\" RegimenFiscal=\"603\" Rfc=\"IAS930628FA8\" /><cfdi:Receptor DomicilioFiscalReceptor=\"50160\" Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA SECCION DEL VALLE DE MEXICO\" RegimenFiscalReceptor=\"603\" Rfc=\"IAS160818JK6\" UsoCFDI=\"G03\" /><cfdi:Conceptos><cfdi:Concepto Cantidad=\"1\" ClaveProdServ=\"94111901\" ClaveUnidad=\"ACT\" Descripcion=\"Diezmos y Ofrendas. 31 de agosto de 2023\" Descuento=\"0.00\" Importe=\"27679.05\" NoIdentificacion=\"1\" ObjetoImp=\"01\" ValorUnitario=\"27679.05\" /></cfdi:Conceptos><cfdi:Complemento><tfd:TimbreFiscalDigital xmlns:tfd=\"http://www.sat.gob.mx/TimbreFiscalDigital\" xsi:schemaLocation=\"http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Version=\"1.1\" UUID=\"6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8\" FechaTimbrado=\"2023-09-01T08:58:30\" RfcProvCertif=\"SCD110105654\" SelloCFD=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" NoCertificadoSAT=\"00001000000502000436\" SelloSAT=\"rPLbpAUuEEDPIpzZpMKRv/TGvvqpR7RxxZEvmE41+bM6YcIS2rMO2jDTTK2Ojl6+xyeIG8tbTQvL2zR6MtGvXAb+RobdoG77ZbUgUnJAMe5kNEs6Rws6D38iva5yUcS7xnQqUJ7/+o9DNdwTLG3wyE1W0hZrv3k7pfve6THc2nU1oXgBNsPD2SrdI8Xf7iexZGhuUQpudBcBeoMs/UJfK/MaeCup2pXJ29iioeSAQJUdB5ffxTFodHAvnBl/6Xuh4lwH+YTj9mIAiNcSS2YVZauB4U+g2Xvw8qDMgQvJPwFYKsGmv+CChfRs0Cvzi8F5cV6FcTfDELHB060PdGBCuQ==\" /></cfdi:Complemento></cfdi:Comprobante>",
+                    "<cfdi:Comprobante xmlns:cfdi=\"http://www.sat.gob.mx/cfd/4\" xmlns:cce11=\"http://www.sat.gob.mx/ComercioExterior11\" xmlns:donat=\"http://www.sat.gob.mx/donat\" xmlns:iedu=\"http://www.sat.gob.mx/iedu\" xmlns:nomina12=\"http://www.sat.gob.mx/nomina12\" xmlns:pago20=\"http://www.sat.gob.mx/Pagos20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Certificado=\"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\" Descuento=\"0.00\" Exportacion=\"01\" Fecha=\"2023-09-01T08:58:28\" Folio=\"8750\" FormaPago=\"03\" LugarExpedicion=\"67510\" MetodoPago=\"PUE\" Moneda=\"MXN\" NoCertificado=\"00001000000700517783\" Sello=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" Serie=\"A\" SubTotal=\"27679.05\" TipoDeComprobante=\"I\" Total=\"27679.05\" Version=\"4.0\" xsi:schemaLocation=\"http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/ComercioExterior11 http://www.sat.gob.mx/sitio_internet/cfd/ComercioExterior11/ComercioExterior11.xsd http://www.sat.gob.mx/donat http://www.sat.gob.mx/sitio_internet/cfd/donat/donat11.xsd http://www.sat.gob.mx/nomina12 http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina12.xsd http://www.sat.gob.mx/iedu http://www.sat.gob.mx/sitio_internet/cfd/iedu/iedu.xsd http://www.sat.gob.mx/Pagos20 http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos20.xsd \"><cfdi:Emisor Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA\" RegimenFiscal=\"603\" Rfc=\"IAS930628FA8\" /><cfdi:Receptor DomicilioFiscalReceptor=\"50160\" Nombre=\"IGLESIA ADVENTISTA DEL SEPTIMO DIA SECCION DEL VALLE DE MEXICO\" RegimenFiscalReceptor=\"603\" Rfc=\"IAS160818JK6\" UsoCFDI=\"G03\" /><cfdi:Conceptos><cfdi:Concepto Cantidad=\"1\" ClaveProdServ=\"94111901\" ClaveUnidad=\"ACT\" Descripcion=\"Diezmos y Ofrendas. 31 de agosto de 2023\" Descuento=\"0.00\" Importe=\"27679.05\" NoIdentificacion=\"1\" ObjetoImp=\"01\" ValorUnitario=\"27679.05\" /></cfdi:Conceptos><cfdi:Complemento><tfd:TimbreFiscalDigital xmlns:tfd=\"http://www.sat.gob.mx/TimbreFiscalDigital\" xsi:schemaLocation=\"http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" Version=\"1.1\" UUID=\"6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8\" FechaTimbrado=\"2023-09-01T08:58:30\" RfcProvCertif=\"SCD110105654\" SelloCFD=\"cgTdepzPXXNyQ4QoIWAqLotmggBZT1LyBMFN8V6nRkfi6iKWNJXiYCGkt5oExN2mnEPq5RNJ/1Yeaw1jksMvHMvjH63i1/Mps/BIBDUsYCm33q1GMhJBf6UVujg8OlaNMDIgS0lH+O1j7n8UrfoM2i47ni2503y6scYGyPTPkV2LzFqNmMZU7OzGvajc8GHp0yxLWV7rBM3NO/g+iyTRBjtpv8d/I59u0yNcsc/fM+ZiIClrLiAs28de1rFSbf6Mv/VEwL9dOdyGDnZaeqAAbO19qqi1CWMtfc5YUwo47WfPhi5SfZxK7Oqczqp5xNbzK3tUEhen+Qa/vL8hnC642g==\" NoCertificadoSAT=\"00001000000502000436\" SelloSAT=\"rPLbpAUuEEDPIpzZpMKRv/TGvvqpR7RxxZEvmE41+bM6YcIS2rMO2jDTTK2Ojl6+xyeIG8tbTQvL2zR6MtGvXAb+RobdoG77ZbUgUnJAMe5kNEs6Rws6D38iva5yUcS7xnQqUJ7/+o9DNdwTLG3wyE1W0hZrv3k7pfve6THc2nU1oXgBNsPD2SrdI8Xf7iexZGhuUQpudBcBeoMs/UJfK/MaeCup2pXJ29iioeSAQJUdB5ffxTFodHAvnBl/6Xuh4lwH+YTj9mIAiNcSS2YVZauB4U+g2Xvw8qDMgQvJPwFYKsGmv+CChfRs0Cvzi8F5cV6FcTfDELHB060PdGBCuQ==\" /></cfdi:Complemento></cfdi:Comprobante>",
+                ],
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "rfc" : {
+                        "type" : "string"
+                    }
+                    "comprobantes" : {
+                        "type" : "array",
+                        "items": {
+                            "type": "string" // UUID
+                        }
+                }
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Acción realizada",
+                "error": false,
+                "response": [
+                    {
+                        "error": false,
+                        "message" "UUID_1"
+                    },
+                    {
+                        "error": false,
+                        "message" "UUID_2"
+                    },
+                    {
+                        "error": false,
+                        "message" "UUID_3"
+                    },
+                    {
+                        "error": true,
+                        "message" "{MENSAJE_ERROR}".
+                    }
+                ]
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "error": {
+                        "type": "boolean"
+                    },
+                    "response": {
+                        "type": "array",
+                        "items": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "error": {
+                                        "type": "boolean"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "error": {
+                                        "type": "boolean"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "error": {
+                                        "type": "boolean"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "error": {
+                                        "type": "boolean"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+

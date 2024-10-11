@@ -1,0 +1,496 @@
+# Group APS SPXtra API
+
+::: warning
+El Token obtenido en el `/login` se deberá colocar en el Header
+de cada uno de los métodos siguientes.<br>
+A continuación se muestra un ejemplo:
+
+:::
+
+```http
+Authorization: bearer 5262d64b892e8d4341000001
+```
+
+
+## GROUPS [/employee-group]
+
+Recursos disponibles para obtener y modificar los datos de los empleados
+
+
+
+### Grupos de empleados [GET /employee-group/{idNomina}{?search}]
+
+Método para obtener los grupos de los empleados.
+Recursos disponibles para acceder a la información de las notificaciones
+
+Tabla `estatus`
+
+        | estatus     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 1 | Pendiente                |
+        | 4 | Rechazado                |
+        | 6 | Contabilizado                |
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error en los datos obtenidos                |
+        | 206 | Los parámetros enviados son inválidos                |
+
+
++ Parameters
+
+    + idNomina: 27 (number, required) - Este valor de obtiene en el SunPlusXtra, en el apartado de configuración de nómina
+    + search: % (string, optional) - Parámetro para indicar el filtro de los grupos a consultar
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "id": 29,
+                        "idPoliza": 751908,
+                        "jrnalNo": 9993,
+                        "idPolizaDetalle": 4999598,
+                        "empresaOrigen": "W11 - Unión Sureste",
+                        "idEmpresaOrigen": 97,
+                        "movimiento": "Crédito",
+                        "empresaDestino": "IAN Iglesia Adventista Nacional",
+                        "cantidad": "18630.00",
+                        "cuentaOrigen": null,
+                        "cuentaDestino": null,
+                        "razonRechazo": null,
+                        "idEstatus": 1,
+                        "linea": 2,
+                        "periodo": "2022007",
+                        "diario": null,
+                        "polizaDetalle": null,
+                        "idPolizaContabiliza": null
+                    },
+                    {
+                        "id": 30,
+                        "idPoliza": 752159,
+                        "jrnalNo": 9996,
+                        "idPolizaDetalle": 5001604,
+                        "empresaOrigen": "W11 - Unión Sureste",
+                        "idEmpresaOrigen": 97,
+                        "movimiento": "Crédito",
+                        "empresaDestino": "IAN Iglesia Adventista Nacional",
+                        "cantidad": "7695.00",
+                        "cuentaOrigen": null,
+                        "cuentaDestino": null,
+                        "razonRechazo": null,
+                        "idEstatus": 1,
+                        "linea": 9,
+                        "periodo": "2022007",
+                        "diario": null,
+                        "polizaDetalle": null,
+                        "idPolizaContabiliza": null
+                    }
+
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+### Grupos de manutención [GET /allowance-group/{idNomina}]
+
+Método para obtener los grupos de los empleados.
+Recursos disponibles para acceder a la información de las notificaciones
+
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error en los datos obtenidos                |
+        | 206 | Los parámetros enviados son inválidos                |
+
+
++ Parameters
+
+    + idNomina: 27 (number, required) - Este valor de obtiene en el SunPlusXtra, en el apartado de configuración de nómina
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "code": "4902",
+                        "idAllowance": 11553,
+                        "name": "Grupo B"
+                    },
+                    {
+                        "code": "4901",
+                        "idAllowance": 11562,
+                        "name": "Grupo A"
+                    },
+                    {
+                        "code": "4903",
+                        "idAllowance": 11567,
+                        "name": "Grupo C"
+                    },
+                    {
+                        "code": "4904",
+                        "idAllowance": 11568,
+                        "name": "Grupo D"
+                    },
+                    {
+                        "code": "4905",
+                        "idAllowance": 11569,
+                        "name": "Grupo E"
+                    },
+                    {
+                        "code": "4906",
+                        "idAllowance": 11638,
+                        "name": "Contratos"
+                    }
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+
+
+## EMPLOYEES [/employee]
+
+Recursos disponibles para obtener y modificar los datos de los empleados
+
+
+### Employees [GET /employee/{idNomina}/{enrollmentCode}]
+
+Método para obtener los datos del empleado.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error en los datos obtenidos                |
+        | 206 | Los parámetros enviados son inválidos                |
+
+
++ Parameters
+
+    + idNomina: 27 (number, required) - Este valor de obtiene en el SunPlusXtra, en el apartado de configuración de nómina
+    + enrollmentCode: ER00000 (string, required) - Parámetro para indicar el código del empleado a consultar
+
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "activo": true,
+                        "curp": "CODL680126MVZHMD05",
+                        "enrollmentCode": "ERCHOLU01",
+                        "groupCode": "2",
+                        "groupName": "EDU-Contrato",
+                        "name": "CHONG DOMÍNGUEZ, LUCINA",
+                        "rfc": "CODL680126BF4"
+                    }
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+### Employees by Name [GET /employee/{idNomina}{?search}]
+
+Método para obtener los datos del empleado.
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error en los datos obtenidos                |
+        | 206 | Los parámetros enviados son inválidos                |
+
+
++ Parameters
+
+    + idNomina: 27 (number, required) - Este valor de obtiene en el SunPlusXtra, en el apartado de configuración de nómina
+    + search: % (string, optional) - Parámetro para indicar el filtro de los empleados a consultar por nombre
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "activo": null,
+                        "curp": null,
+                        "enrollmentCode": "ERCRUNE01",
+                        "funcion": "AUCONTA01",
+                        "fund": "10",
+                        "groupCode": null,
+                        "groupName": null,
+                        "idAllowance": 11553,
+                        "idEmployee": 222558,
+                        "idEnrollment": 119166,
+                        "job": "AUXILIAR CONTABLE",
+                        "name": "NEFTALI CRUZ ESCOBAR",
+                        "rfc": null
+                    }
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+### Update Employee [PUT /employee/{idNomina}/{enrollmentCode}]
+
+Método que activa a un empleado que estaba inactivo.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error en los datos obtenidos                |
+        | 206 | Los parámetros enviados son inválidos                |
+
+
++ Parameters
+
+    + idNomina: 27 (number, required) - Este valor de obtiene en el SunPlusXtra, en el apartado de configuración de nómina
+    + enrollmentCode: ER00000 (string, required) - Parámetro para indicar el código del empleado a consultar
+
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "activo": true,
+                        "curp": "CODL680126MVZHMD05",
+                        "enrollmentCode": "ERCHOLU01",
+                        "groupCode": "2",
+                        "groupName": "EDU-Contrato",
+                        "name": "CHONG DOMÍNGUEZ, LUCINA",
+                        "rfc": "CODL680126BF4"
+                    }
+                ]
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+

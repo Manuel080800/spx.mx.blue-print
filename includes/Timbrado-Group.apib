@@ -1,0 +1,679 @@
+# Group Timbrado de Comprobantes
+
+::: warning
+El Token obtenido en el `/login` se deberá colocar en el Header
+de cada uno de los métodos siguientes.<br>
+A continuación se muestra un ejemplo:
+
+:::
+
+```http
+Authorization: bearer 5262d64b892e8d4341000001
+```
+
+## /verifica-UUID
+
+### Verifica Comprobante [POST]
+
+Método que Verifica si uno o varios comprobantes están registrados en la BD se SunPlusXtra, se devuelve un Map indicado por cada UUID si es true o false.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 100 | Error de datos                |
+        | 207 | El RFC no coincide con el de la empresa                |
+
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "rfc" : "IAS930628FA8",
+                "uuidList" : ["AAAA", "BBBB"]
+
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "rfc": {
+                        "type": "string"
+                    },
+                    "uuidList": {
+                        "type" : "array",
+                        "items": {
+                            "type": "string",
+                        }
+                    }
+                }
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Cargado correctamente",
+                "response" : "UUID_RESPONSE_MAP"
+            }
+
+    + Schema
+
+            {
+                "type" : "object",
+                "properties" : {
+                    "message" : {
+                        "type":"string"
+                    },
+                    "response" : {
+                        "type": "map" //KEY:UUID, VALUE:boolean
+                    }
+                }
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+## /timbra-comprobante
+
+### Timbra Comprobante [POST]
+
+Método que Timbrar una factura.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 202 | Folio no configurado SPXtra                |
+        | 203 | Operación de timbrado Fallida                |
+        | 207 | El RFC no coincide con el de la empresa                |
+        | 208 | XML enviado incorrecto                |
+
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "comprobante" : "<?xml version=\"1.0\" encoding=\"utf-8\"?><cfdi:Comprobante xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:pago20=\"http://www.sat.gob.mx/Pagos20\" xmlns:donat=\"http://www.sat.gob.mx/donat\" xmlns:iedu=\"http://www.sat.gob.mx/iedu\" xsi:schemaLocation=\"http://www.sat.gob.mx/cfd/4\thttp://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/Pagos20  http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos20.xsd\" xmlns:cfdi=\"http://www.sat.gob.mx/cfd/4\" Version=\"4.0\" Serie=\"IN\" Folio=\"15197\" Fecha=\"2023-08-14T13:27:11\" Sello=\"\" FormaPago=\"01\" NoCertificado=\"\" Certificado=\"\" SubTotal=\"1544.0000\" Descuento=\"268.00\" Moneda=\"MXN\" Total=\"1276.0000\" TipoDeComprobante=\"I\" Exportacion=\"01\" MetodoPago=\"PUE\" LugarExpedicion=\"29520\" ><cfdi:Emisor Rfc=\"FEN000612UH0\" Nombre=\"FILANTROPICA Y EDUCATIVA DEL NORTE DE CHIAPAS\" RegimenFiscal=\"603\" /><cfdi:Receptor Rfc=\"XAXX010101000\" Nombre=\"CRISTEN ELIZABETH LOPEZ&#x9; LOPEZ\" DomicilioFiscalReceptor=\"29520\" RegimenFiscalReceptor=\"616\" UsoCFDI=\"S01\" /><cfdi:Conceptos><cfdi:Concepto ClaveProdServ=\"86121503\" NoIdentificacion=\"03\" Cantidad=\"1\" ClaveUnidad=\"E48\" Descripcion=\"MATRICULA PRIMARIA\" ValorUnitario=\"1544.0000\" Importe=\"1544.0000\" Descuento=\"268\" ObjetoImp=\"01\" /></cfdi:Conceptos><cfdi:Complemento><tfd:TimbreFiscalDigital Version=\"1.1\" FechaTimbrado=\"0000-00-00T00:00:00\" RfcProvCertif=\"\" NoCertificadoSAT=\"\" SelloSAT=\"\" SelloCFD=\"\" UUID=\"\" xsi:schemaLocation=\"http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd\" xmlns:tfd=\"http://www.sat.gob.mx/TimbreFiscalDigital\"/></cfdi:Complemento></cfdi:Comprobante>",
+                "emailsSending" : "",
+                "useEmailTemplate" : true,
+                "htmlEmailOptional" : "",
+                "generateFolio" : true
+
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "comprobante": {
+                        "type": "string"
+                    },
+                    "emailsSending" : {
+                        "type" : "string",
+                        "format" : "emails_comas_separated"
+                    },
+                    "useEmailTemplate": {
+                        "type" : "boolean"
+                    },
+                    "htmlEmailOptional" : {
+                        "type" : "string",
+                        "format": "html"
+                    },
+                    "generateFolio" : {
+                        "type" : "boolean"
+                    }
+                }
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Obtenido correctamente",
+                "response" : "XML_TIMBRADO"
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+## /cancelar-comprobante
+
+### Cancelar Comprobante [POST]
+
+Método para cancelar un comprobante o factura, pero que esté registrado en la BD del proveedor, es decir que se haya realizado desde el SPXtra.
+
+
+Tabla `motivos_cancelación`.
+
+        | Clave     | Motivo                                     |
+        |-----------|-------------------------------------------------|
+        | 01 | Comprobantes emitidos con errores con relación                |
+        | 02 | Comprobantes emitidos con errores sin relación                |
+        | 03 | No se llevó a cabo la operación                |
+        | 04 | Operación nominativa relacionada en una factura global                |
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 202 | Folio no configurado SPXtra                |
+        | 203 | Operación de timbrado Fallida                |
+        | 207 | El RFC no coincide con el de la empresa                |
+        | 208 | XML enviado incorrecto                |
+
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "uuid" : "6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8",
+                "folioSustituye" : "",
+                "motivo" : ""
+
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "uuid": {
+                        "type": "string",
+                        "format" : "uuid"
+                    },
+                    "folioSustituye" : {
+                        "type" : "string",
+                        "format" : "uuid"
+                    },
+                    "motivo": {
+                        "type" : "string",
+                        "format" : ["01", "02", "03", "04"]  //Tabla 'motivos_cancelación'
+                    }
+                }
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Obtenido correctamente",
+                "response" : "CANCELACION_RESPONSE"
+            }
+
+    + Schema
+
+                {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "response" : {
+                            "type" : "object",
+                            "properties": {
+                                "acuse" : {
+                                    "type": "string"
+                                },
+                                "fecha" : {
+                                    "type" : "date"
+                                },
+                                "rfcEmisor" : {
+                                    "type" : "string"
+                                },
+                                "uuid" : {
+                                    "type" : "string"
+                                },
+                                "response" : {
+                                    "type" : "map"
+                                    "required" : false
+                                }
+                            }
+                        }
+                    }
+                }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+## /cancelar-comprobante-unregistered
+### Cancelar Comprobante No Regisitrado [POST]
+
+Método para cancelar un comprobante o factura, pero que esté registrado en la BD del proveedor, es decir que se haya realizado desde el SPXtra.
+
+
+Tabla `motivos_cancelación`.
+
+        | Clave     | Motivo                                     |
+        |-----------|-------------------------------------------------|
+        | 01 | Comprobantes emitidos con errores con relación                |
+        | 02 | Comprobantes emitidos con errores sin relación                |
+        | 03 | No se llevó a cabo la operación                |
+        | 04 | Operación nominativa relacionada en una factura global                |
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 202 | Folio no configurado SPXtra                |
+        | 203 | Operación de timbrado Fallida                |
+        | 207 | El RFC no coincide con el de la empresa                |
+        | 208 | XML enviado incorrecto                |
+
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "uuid" : "6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8",
+                "folioSustituye" : "",
+                "motivo" : "",
+                "fechaEmision" : "2023-09-01",
+                "horaEmision" : "08:58:28",
+                "rfcReceptor" : "IAS160818JK6",
+                "tipoComprobante" : "I",
+                "total" : "27679.05"
+
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "uuid": {
+                        "type": "string",
+                        "format" : "uuid"
+                    },
+                    "folioSustituye" : {
+                        "type" : "string",
+                        "format" : "uuid"
+                    },
+                    "motivo": {
+                        "type" : "string",
+                        "format" : ["01", "02", "03", "04"]  //Tabla 'motivos_cancelación'
+                    },
+                    "fechaEmision": {
+                        "type" : "date",
+                        "format" : "yyyy-mm-dd"
+                    },
+                    "horaEmision": {
+                        "type" : "time",
+                        "format" : "hh:mm:ss"
+                    },
+                    "rfcReceptor": {
+                        "type" : "string"
+                    },
+                    "tipoComprobante": {
+                        "type" : "string",
+                        format: ["I", "E", "P", "N"]
+                    },
+                    "total": {
+                        "type" : "string",
+                        "format": "currency"
+                    }
+                }
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Obtenido correctamente",
+                "response" : "CANCELACION_RESPONSE"
+            }
+
+    + Schema
+
+                {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string"
+                        },
+                        "response" : {
+                            "type" : "object",
+                            "properties": {
+                                "acuse" : {
+                                    "type": "string"
+                                },
+                                "fecha" : {
+                                    "type" : "date"
+                                },
+                                "rfcEmisor" : {
+                                    "type" : "string"
+                                },
+                                "uuid" : {
+                                    "type" : "string"
+                                },
+                                "response" : {
+                                    "type" : "map"
+                                    "required" : false
+                                }
+                            }
+                        }
+                    }
+                }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+## /comprobante
+
+### Obtener Comprobante [GET]
+
+Método recupera un XML.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 100 | Error en el XML                |
+        | 201 | Error en la consulta, parámetros inválidos                |
+
+
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "uuid" : "6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8"
+            }
+
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Obtenido correctamente",
+                "response" : "XML"
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+## /consulta-estado-comprobante
+### Consulta Estado de Comprobante [GET]
+
+Método para obtener el `status` del comprobante y saber si es posible cancelarlo.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |-----------|-------------------------------------------------|
+        | 100 | Error en la consulta de la información                |
+        | 101 | Datos inválidos                |
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "uuid" : "6D4484D2-8B4B-A64A-B8ED-D2BD695DC5E8",
+                "rfcReceptor" : "IAS160818JK6",
+                "total" : "27679.05"
+            }
+
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Obtenido correctamente",
+                "response" : {
+                    "codigo": "200",
+                    "descripcionRespuesta": "Consulta realizada correctamente",
+                    "estatusCancelacion": {},
+                    "comprobantesRelacionados": {}
+                }
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }

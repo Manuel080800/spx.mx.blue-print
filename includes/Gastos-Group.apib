@@ -1,0 +1,900 @@
+# Group Gastos SPXtra API
+
+::: warning
+El Token obtenido en el `/login` se deberá colocar en el Header
+de cada uno de los métodos siguientes.<br>
+A continuación se muestra un ejemplo:
+
+:::
+
+```http
+Authorization: bearer 5262d64b892e8d4341000001
+```
+
+
+## BUDGET [/budget]
+
+Recursos disponibles para obtener la información de los presupuestos
+
+
+
+### Budget Balance [GET /budget/balance{?cuenta,periodoInicial,periodoFinal,fondo,funcion,who}]
+
+
+Recursos disponibles para obtener el saldo y el presupuesto de una cuenta y los parámetros dados
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error datos no enontrados, según la información dada                |
+        | 206 | Error de información recibida Datos incorrectos                |
+
++ Parameters
+
+    + cuenta: 101110 (string, required) - Parámetro para indicar el código de la cuenta a consultar
+    + periodoInicial: 2024001 (string, required) - Format: 'yyyy0mm' Parámetro para indicar el periodo desde el cual iniciará el cálculo
+    + periodoFinal: 2024001 (string, required) - Format: 'yyyy0mm' Parámetro para indicar el periodo hasta el que se considerará el cálculo
+    + fondo: 10 (string, optional) - Parámetro para indicar el código del fondo a consultar
+    + funcion: 10 (string, optional) - Parámetro para indicar el código de la función a consultar
+    + who: * (string, optional) - Parámetro para indicar el código del who a consultar
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "period": "2018001",
+                        "importe": 0,
+                        "credito": 211,
+                        "debito": 462,
+                        "budget": 4547,
+                        "analT0": "",
+                        "analT1": "",
+                        "analT2": "10",
+                        "analT3": "",
+                        "analT4": "",
+                        "analT5": "",
+                        "analT6": "",
+                        "analT7": "",
+                        "analT8": "",
+                        "analT9": ""
+                    },
+                    {
+                        "period": "2018002",
+                        "importe": 0,
+                        "credito": 7413,
+                        "debito": 482,
+                        "budget": 647,
+                        "analT0": "",
+                        "analT1": "",
+                        "analT2": "10",
+                        "analT3": "",
+                        "analT4": "",
+                        "analT5": "",
+                        "analT6": "",
+                        "analT7": "",
+                        "analT8": "",
+                        "analT9": ""
+                    },
+                    {
+                        "period": "2018003",
+                        "importe": -271,
+                        "credito": 354,
+                        "debito": 874,
+                        "budget": 6840,
+                        "analT0": "",
+                        "analT1": "",
+                        "analT2": "10",
+                        "analT3": "",
+                        "analT4": "",
+                        "analT5": "",
+                        "analT6": "",
+                        "analT7": "",
+                        "analT8": "",
+                        "analT9": ""
+                    }
+                ]
+            }
+    
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "response": {
+                        "type": "array",
+                        "items": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "period": {
+                                        "type": "string"
+                                    },
+                                    "importe": {
+                                        "type": "number"
+                                    },
+                                    "credito": {
+                                        "type": "number"
+                                    },
+                                    "debito": {
+                                        "type": "number"
+                                    },
+                                    "budget": {
+                                        "type": "number"
+                                    },
+                                    "analT0": {
+                                        "type": "string"
+                                    },
+                                    "analT1": {
+                                        "type": "string"
+                                    },
+                                    "analT2": {
+                                        "type": "string"
+                                    },
+                                    "analT3": {
+                                        "type": "string"
+                                    },
+                                    "analT4": {
+                                        "type": "string"
+                                    },
+                                    "analT5": {
+                                        "type": "string"
+                                    },
+                                    "analT6": {
+                                        "type": "string"
+                                    },
+                                    "analT7": {
+                                        "type": "string"
+                                    },
+                                    "analT8": {
+                                        "type": "string"
+                                    },
+                                    "analT9": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "period": {
+                                        "type": "string"
+                                    },
+                                    "importe": {
+                                        "type": "number"
+                                    },
+                                    "credito": {
+                                        "type": "number"
+                                    },
+                                    "debito": {
+                                        "type": "number"
+                                    },
+                                    "budget": {
+                                        "type": "number"
+                                    },
+                                    "analT0": {
+                                        "type": "string"
+                                    },
+                                    "analT1": {
+                                        "type": "string"
+                                    },
+                                    "analT2": {
+                                        "type": "string"
+                                    },
+                                    "analT3": {
+                                        "type": "string"
+                                    },
+                                    "analT4": {
+                                        "type": "string"
+                                    },
+                                    "analT5": {
+                                        "type": "string"
+                                    },
+                                    "analT6": {
+                                        "type": "string"
+                                    },
+                                    "analT7": {
+                                        "type": "string"
+                                    },
+                                    "analT8": {
+                                        "type": "string"
+                                    },
+                                    "analT9": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "period": {
+                                        "type": "string"
+                                    },
+                                    "importe": {
+                                        "type": "number"
+                                    },
+                                    "credito": {
+                                        "type": "number"
+                                    },
+                                    "debito": {
+                                        "type": "number"
+                                    },
+                                    "budget": {
+                                        "type": "number"
+                                    },
+                                    "analT0": {
+                                        "type": "string"
+                                    },
+                                    "analT1": {
+                                        "type": "string"
+                                    },
+                                    "analT2": {
+                                        "type": "string"
+                                    },
+                                    "analT3": {
+                                        "type": "string"
+                                    },
+                                    "analT4": {
+                                        "type": "string"
+                                    },
+                                    "analT5": {
+                                        "type": "string"
+                                    },
+                                    "analT6": {
+                                        "type": "string"
+                                    },
+                                    "analT7": {
+                                        "type": "string"
+                                    },
+                                    "analT8": {
+                                        "type": "string"
+                                    },
+                                    "analT9": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+### Annual Budget [GET /budget/annual{?journalNo,function}]
+
+Recursos disponibles para obtener el presupuesto anual según el diario y la función dada
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error datos no enontrados, según la información dada                |
+        | 206 | Error de información recibida Datos incorrectos                |
+
+
++ Parameters
+
+    + journalNo: 5786 (string, required) - Parámetro para indicar el numero de diario a consultar
+    + function: 10 (string, optional) - Parámetro para indicar el código de la función a consultar
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": 1120.05
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "response": {
+                        "type": "number"
+                    }
+                }
+            }
+
++ Response 220 (application/json)
+    Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+     Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+     Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+
+### Annual Budget Used [GET /budget/annual-used]
+
+Recursos disponibles para obtener el presupuesto anual usado a partir de los parámetros de consulta, startPeriod, endPeriod, function y projects
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error datos no enontrados, según la información dada                |
+        | 206 | Error de información recibida Datos incorrectos                |
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+  
+    + Body
+
+            {
+                "startPeriod": "2024001",
+                "endPeriod": "2024002",
+                "function": "10",
+                "projects": ["P1-RECLAMOS ARM", "*"]
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "startPeriod": {
+                        "type": "string",
+                        "format": "yyyy0mm"
+                    },
+                    "endPeriod": {
+                        "type": "string",
+                        "format": "yyyy0mm"
+                    },
+                    "function": {
+                        "type": "string"
+                    },
+                    "projects": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+
+
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": 5426.05
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "response": {
+                        "type": "number"
+                    }
+                }
+            }
+
++ Response 220 (application/json)
+  Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+  Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+  Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+### Monthly Budget [GET /budget/monthly{?journalNo,function}]
+
+Recursos disponibles para obtener el presupuesto mensual según el diario y la función dada
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error datos no enontrados, según la información dada                |
+        | 206 | Error de información recibida Datos incorrectos                |
+
+
++ Parameters
+
+    + journalNo: 5786 (string, required) - Parámetro para indicar el numero de diario a consultar
+    + function: 10 (string, optional) - Parámetro para indicar el código de la función a consultar
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "amount": 6521.220,
+                        "periodo": 2018002
+                    }
+                ]
+            }
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "response": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "amount": {
+                                    "type": "number"
+                                },
+                                "periodo": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
++ Response 220 (application/json)
+  Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+  Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+  Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+### Monthly Budget Used [GET /budget/monthly-used]
+
+Recursos disponibles para obtener el presupuesto mensual usado a partir de los parámetros de consulta, startPeriod, endPeriod, function y projects
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                     |
+        |------------|-------------------------------------------------|
+        | 202 | Error en los datos obtenidos                |
+        | 203 | Error datos no enontrados, según la información dada                |
+        | 206 | Error de información recibida Datos incorrectos                |
+
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
+    + Body
+
+            {
+                "startPeriod": "2024001",
+                "endPeriod": "2024002",
+                "function": "10",
+                "projects": ["P1-RECLAMOS ARM", "*"]
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "startPeriod": {
+                        "type": "string",
+                        "format": "yyyy0mm"
+                    },
+                    "endPeriod": {
+                        "type": "string",
+                        "format": "yyyy0mm"
+                    },
+                    "function": {
+                        "type": "string"
+                    },
+                    "projects": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    {
+                        "amount": 26567.630,
+                        "periodo": 2017006
+                    },
+                    {
+                        "amount": 5430.000,
+                        "periodo": 2017007
+                    },
+                    {
+                        "amount": 29301.610,
+                        "periodo": 2017010
+                    },
+                    {
+                        "amount": 11124.760,
+                        "periodo": 2017011
+                    },
+                    {
+                        "amount": 96190.830,
+                        "periodo": 2017012
+                    }
+                ]
+            }
+
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "response": {
+                        "type": "array",
+                        "items": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "number"
+                                    },
+                                    "periodo": {
+                                        "type": "integer"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "number"
+                                    },
+                                    "periodo": {
+                                        "type": "integer"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "number"
+                                    },
+                                    "periodo": {
+                                        "type": "integer"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "number"
+                                    },
+                                    "periodo": {
+                                        "type": "integer"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "number"
+                                    },
+                                    "periodo": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+
+
++ Response 220 (application/json)
+  Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+  Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+  Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }
+
+### Journal Period [GET /budget/journal-period]
+
+Se obtiene una lista de periodos de diarios donde se puede contabilizar.
+
+
+Tabla `codes`, Lista de códigos de error
+
+        | Código     | Descripción                                            |
+        |------------|--------------------------------------------------------|
+        | 202        | Error en los datos obtenidos                           |
+        | 203        | Error datos no enontrados, según la información dada   |
+        | 206        | Error de información recibida Datos incorrectos        |
+
+
++ Request (application/json)
+
+    + Headers
+
+                Accept: application/json
+                Authorization: bearer {{TOKEN_OBTENIDO_DEL_LOGIN}}
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Consulta correcta",
+                "response": [
+                    2018001,
+                    2018002,
+                    2018003,
+                    2018004,
+                    2018005,
+                    2018006,
+                    2018007,
+                    2018008,
+                    2018009,
+                    2018010,
+                    2018011,
+                    2018012,
+                    2019001,
+                    2019002,
+                    2019003,
+                    2019004,
+                    2019005,
+                    2019006
+                ]
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "response": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+
++ Response 220 (application/json)
+  Si el Token está caducado o es inválido
+
+    + Body
+
+            {
+                "message" : "Autenticación incorrecta",
+                "error" : true
+            }
+
++ Response 221 (application/json)
+  Si el usuario con el que se registró el Token ya no está activo en el SunPlusXtra
+
+    + Body
+
+            {
+                "message" : "Usuario SPX no encontrado",
+                "error" : true
+            }
+
++ Response 201 (application/json)
+  Otros mensajes de error definidos en la tabla `codes`
+
+    + Body
+
+            {
+                "message" : "Consulta incorrecta",
+                "description" : "MENSAJE_ERROR",
+                "code" : "CODIGO_ERROR",
+                "error" : true
+            }

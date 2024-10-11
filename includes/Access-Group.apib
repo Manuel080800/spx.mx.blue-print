@@ -1,0 +1,132 @@
+# Group Access Permission
+
+
+### ACCESS 
+
+
+Antes de poder acceder a la API de SunPlusXtra, es necesario obtener un token de acceso desde un host distinto. Este token se obtiene de la siguiente URL:
+
+https://api.asgardeo.io/t/interamerica/oauth2/token
+
+
+        | Parámetros     | Tipo     | Requerido | Descripción                                     |
+        |----------------|----------|-----------|-------------------------------------------------|
+        | `grant_type`    | string   | si        | Tipo de concesión de acceso, en este caso `client_credentials` |
+
+
+Authorization Basic: Base64 encode de `Username` y `Password` unidos por `:`, esta información es proporcionada por la IAD
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            Authorization: Basic GlRoNE1Ya3k3NE5KQlRVbmZCRVFrYTpBMmxGeDU4emVkbm5ob0FSVUxNZ2NrUFdBbEt1azR5QmZ1RXMyU3hYU3RvYQ==
+
+    + Body
+
+            {
+                "grant_type": "client_credentials"
+            }
+
++ Response 200 (application/json)
+
+        {
+            "access_token": "7867a1f5fb24c30d95227c77829a6cc8807062c86f4f406914b258adab78a498",
+            "token_type": "Bearer"
+        }
+
+
+Una vez obtenido el token, se puede utilizar para acceder a la API de SunPlusXtra 
+
+
+::: note
+El Token obtenido en el `oauth` se deberá colocar en el Header
+de cada uno de los métodos hasta en el login.<br>
+A continuación se muestra un ejemplo:
+
+:::
+
+```http
+API-Key: Bearer vdTNYdHR1ME1pSGJIVE0iLCJraWQiOiJaVFkwTTJNM1pURmtNR1F3T0RJMVkyVmpaamt5TmpNM1lqUXhOVE13WXpSbE5qUXdNVFpoWmpWbE56YzJNemMxWTJKak1tWmtNR1ZqT1dabE16bGtNUV9SUzI1NiIsInR5cCI6ImF0K2p3dCIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJhZTczZmE1Yy1kMjQ3LTRmOGMtOGNiNy1mYzU1ZWRlZjgzM2YiLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6WyJSMFJkaDZ2VGg0TVhreTc0TkpCVFVuZkJFUWthIiwiY2hvcmVvOmRlcGxveW1lbnQ6c2FuZGJveCJdLCJuYmYiOjE3MTY0MDUyMzEsImF6cCI6IlIwUmRoNnZUaDRNWGt5NzROSkJUVW5mQkVRa2EiLCJvcmdfaWQiOiJiMzYxNjhlOC1lZTkwLTQ5NDgtODQ0Yi01MDE3MzBjN2E1ZjEiLCJpc3MiOiJodHRwczpcL1wvYXBpLmFzZ2FyZGVvLmlvXC90XC9pbnRlcmFtZXJpY2FcL29hdXRoMlwvdG9rZW4iLCJleHAiOjE3MTY0MDYxMzEsIm9yZ19uYW1lIjoiaW50ZXJhbWVyaWNhIiwiaWF0IjoxNzE2NDA1MjMxLCJqdGkiOiJhNGQ0NjY1Ny04ZGZiLTRkYjMtOGIzOC00OWE2Y2FiOTc0MzUiLCJjbGllbnRfaWQiOiJSMFJkaDZ2VGg0TVhreTc0TkpCVFVuZkJFUWthIn0.qwd0XV61PULNHXxa2A1yZXxTVipSpzs6yNE3H_q1kKNoD8P7ZyOke-YVwkTRqN8WFmzg56dhEqibbAlmnn4z2-yDhmmAhKKYAf-xbooQxX0B3apA7RrNymzDcSmpUhgpc_DOLVn0npKE388J_DshiE-7n4Wq3guCPp6bk6YzuLegI8Zk1MN7MGqwip5mq2wS5WnDiBuzIPT5BoQ09ch4gQnHie2waZXKUaII7w5eBK3s30-ioyZIcCbheBJ9-V3ONS5OiYWakez_Q2cECnKcaTClS3iBa2vjDYS3VwSYdyFSvnja8Vu82eSF33WtxcecISIwoEdmJrb4Fbe5vdK99Q
+```
+
+***TOKEN OBTENIDO EN EL OAUTH***
+
+El token obtenido en el `oauth` es necesario para poder acceder a la API de SunPlusXtra. 
+El API-Key es el acceso al API de SunPlusXtra, a la siguiente URL:
+
+https://gateway.iadnet.org/qwhq/spx/v1.1
+
+::: note
+Adicional al Token `API-Key`, se deberá obtener un segundo 
+token de acceso a los métodos del API de SunPlusXtra desde 
+el `/login`, este segundo Token tiene caducidad indefinida, 
+a diferencia del primer Token del `API-Key` que tiene una 
+caducidad de `15 min`.
+
+:::
+
+***LOGIN ACCESS `/login`***
+
+::: note
+El Token obtenido en el `/login` se deberá colocar en el Header
+de cada uno de los métodos siguientes.<br>
+A continuación se muestra un ejemplo:
+
+:::
+
+```http
+Authorization: bearer 5262d64b892e8d4341000001
+```
+
+::: warning
+Ambos tokens son necesarios para poder acceder a la API de SunPlusXtra.
+:::
+
+*** ***
+*** ***
+*** ***
+
+### Permiso de acceso [POST /login]
+
+        | Parámetros     | Tipo     | Requerido | Descripción                                     |
+        |----------------|----------|-----------|-------------------------------------------------|
+        | `idusuario`     | string   | si        | Usuario del sistema SunPlusXtra                |
+        | `password`      | string   | si        | Contraseña del usuario del SunPlusXtra         |
+        | `email`         | string   | si        | Email del usuario institucional al que se mantendrá comunicación         |
+
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/json
+            API-Key: Bearer 7867a1f5fb24c30d95227c77829a6cc8807062c86f4f406914b258adab78a498
+
+    + Body
+
+            {
+                "idusuario":"SPX_USER",
+                "password": "SPX_PASSWORD",
+                "email":"EMAIL_USER"
+            }
+
+
++ Response 200 (application/json)
+
+        {
+            "message": "Acceso permitido",
+            "access_token": "7867a1f5fb24c30d95227c77829a6cc8807062c86f4f406914b258adab78a498",
+            "token_type": "Bearer"
+        }
+
+
++ Response 221 (application/json)
+
+        {
+            "message": "Usuario SPX no encontrado",
+            "error" : true
+        }
