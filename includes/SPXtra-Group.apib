@@ -2263,22 +2263,29 @@ Método que permite imprimir un diario al SunPlus, por medio del API de SunPlusX
 
 Tabla `printFormat`
 
-        | printFormat  | Descripción                     |
-        |--------------|---------------------------------|
-        | PFP          | Imprimir Poliza Financiera      |
-        | PP           | Imprimir Pago                   |
-        | PC           | Imprimir Cheque                 |
-        | PR           | Imprimir Recibo                 |
-        | PCS          | Imprimir Corte de Caja          |
-        | PNM          | Imprimir Nota de Aviso          |
+        | printFormat  | Descripción                           |
+        |--------------|---------------------------------------|
+        | PGP          | Imprimir Poliza Gobierno              |
+        | PASR         | Imprimir Reporte de estado de cuenta  |
+        | PR           | Imprimir Recibo                       |
+        | PP           | Imprimir Pago                         |
+        | PC           | Imprimir Cheque                       |
+        | PCS          | Imprimir Corte de Caja                |
+        | PAD          | Imprimir Reconocer Depositos          |
+        | PNM          | Imprimir Nota de Aviso                |
+        | PDM          | Imprimir Mantenimiento Diario         |
+        | PFP          | Imprimir Poliza Financiera            |
+        | PPCV         | Imprimir Vale Caja Chica              |
+        | PVC          | Imprimir Vale Cheque                  |
 
 Tabla `codes`, Lista de códigos de error
 
-        | Código     | Descripción                          |
-        |-----------|---------------------------------------|
-        | 201 | Error devuelto por SunPlus                  |
-        | 202 | Error de conexión al SunPlus                |
-        | 203 | Error de respuesta o parámetros inválidos   |
+        | Código     | Descripción                                 |
+        |------------|---------------------------------------------|
+        | 201        | Error devuelto por SunPlus                  |
+        | 202        | Error de conexión al SunPlus                |
+        | 203        | Error de respuesta o parámetros inválidos   |
+        | 206        | Error de parámetros enviados inválidos      |
 
 Existen dos formas de imprimir un diario, el primero utilizando el logo por **default** mediante `Request` y el segundo, empleando un logo personalizado con la clave **logoSource** mediante `Request` `Logo personalizado`.
 
@@ -2410,7 +2417,7 @@ Para imprimir con un logo personalizado, es necesario proporcionar un objeto `lo
                 "error" : true
             }
 
-### Rango Diario [POST /journal/range/{startJrnalNo}/{endJrnalNo}]
+### Rango Diario [GET /journal/range/{startJrnalNo}/{endJrnalNo}]
 
 Método que permite obtener un rango de diarios contabilizados en el SunPlus, por medio del API de SunPlusXtra.
 
